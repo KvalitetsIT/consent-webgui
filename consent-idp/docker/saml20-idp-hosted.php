@@ -20,4 +20,5 @@ $metadata['__DYNAMIC:1__'] = array(
 	 */
 	'auth' => 'default-sp',
 
+    'userid.attribute' => 'uid', 
 );
