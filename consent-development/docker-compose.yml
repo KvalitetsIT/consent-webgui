@@ -68,9 +68,40 @@ services:
       - MONGODB=mongo
       - MONGODB_DATABASE=mongo_appa
       - CORRELATION_ID=correlation-id
-     links:
-      - app-a-saml-sp
-      - mongo
-      - app-a
      ports:
       - "8082:80"
+   app-b-saml-sp:
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spapp:59eb03a2e9bfedfd4faa4eb70265efc25e61d3e4
+     extra_hosts:
+      - "frontend:172.17.0.1"
+     volumes:
+      - ./appb/config:/certificates
+     environment:
+      - IDP_METADATA_URL=http://frontend/consentidp/saml2/idp/metadata.php
+      - IDP_LOGIN_URL=http://frontend/consentidp/saml2/idp/SSOService.php
+      - SP_IMPORT_KEYSTORE=appb.p12
+      - SP_IMPORT_PASSWORD=Test1234
+      - SP_IMPORT_ALIAS=appb
+      - SP_ENTITY_ID=dev:kit:appb
+      - SAML_LB_SCHEME=http
+      - SAML_LB_SERVERNAME=frontend
+      - SAML_LB_SERVERPORT=8084
+      - APP_CONTEXT=appb
+      - MONGODB=mongo
+      - MONGODB_DATABASE=mongo_appb
+   app-b:
+     image: nginx:1.11.12-alpine
+     volumes:
+      - ./appb/html:/usr/share/nginx/html/appb:ro
+   app-b-sp-proxy:
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spproxy:59eb03a2e9bfedfd4faa4eb70265efc25e61d3e4
+     environment:
+      - ENDPOINT_URL=http://app-b/
+      - SAML_URL=http://app-b-saml-sp:8080/
+      - CONTEXT=appb
+      - MONGODB=mongo
+      - MONGODB_DATABASE=mongo_appb
+      - CORRELATION_ID=correlation-id
+     ports:
+      - "8084:80"
+
