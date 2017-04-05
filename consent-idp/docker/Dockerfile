@@ -9,11 +9,11 @@ RUN chmod +x /entrypoint.sh
 RUN mkdir /templates
 ADD apache2.conf /templates/
 
-#
-RUN cp -r /var/www/html/ /var/consent/
-RUN mkdir /var/consent/cert
+RUN cp -r /var/www/html/ /var/simplesamlphp/
+RUN mkdir /var/simplesamlphp/cert
+
 # Simplesamlphp setup - idp
-#ADD authsources.php /var/consent/config-templates/
-ADD saml20-idp-hosted.php /var/consent/metadata-templates/
+ADD authsources.php /var/simplesamlphp/config-templates/
+ADD saml20-idp-hosted.php /var/simplesamlphp/metadata-templates/
 
 ENTRYPOINT ["/entrypoint.sh"]

@@ -12,9 +12,26 @@ services:
       - IDP_ADMIN_PASSWORD=test123
       - IDP_TECHNICAL_EMAIL=eva@kvalitetsit.dk
       - IDP_SECRET_SALT=abcd23poiu
-      - IDP_HOSTNAME=frontend
+      - IDP_HOSTNAME=frontend:8080
       - IDP_CONTEXTPATH=citizenidp
       - IDP_PROTOCOL=http
+     ports:
+      - "8080:80"
+   citizen-consentidp:
+     image: kvalitetsit/consent-idp:latest
+     volumes:
+      - ./consentidp/cert:/cert
+      - ./consentidp/consentidp-metadata:/metadata
+     environment:
+      - IDP_CERTIFICATE=certificate.crt
+      - IDP_PRIVATE_KEY=certificate.pem
+      - IDP_ADMIN_PASSWORD=test123
+      - IDP_TECHNICAL_EMAIL=eva@kvalitetsit.dk
+      - IDP_SECRET_SALT=abcd23poiu
+      - IDP_HOSTNAME=frontend
+      - IDP_CONTEXTPATH=consentidp
+      - IDP_PROTOCOL=http
+      - SOURCE_IDP_URL=http://frontend:8080/citizenidp/saml2/idp/metadata.php
      ports:
       - "80:80"
    mongo:
@@ -26,8 +43,8 @@ services:
      volumes:
       - ./appa/config:/certificates
      environment:
-      - IDP_METADATA_URL=http://frontend/citizenidp/saml2/idp/metadata.php
-      - IDP_LOGIN_URL=http://frontend/citizenidp/saml2/idp/SSOService.php  
+      - IDP_METADATA_URL=http://frontend/consentidp/saml2/idp/metadata.php
+      - IDP_LOGIN_URL=http://frontend/consentidp/saml2/idp/SSOService.php  
       - SP_IMPORT_KEYSTORE=appa.p12
       - SP_IMPORT_PASSWORD=Test1234
       - SP_IMPORT_ALIAS=appa
