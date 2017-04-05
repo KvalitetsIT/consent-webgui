@@ -5,9 +5,6 @@
  * See: https://simplesamlphp.org/docs/stable/simplesamlphp-reference-sp-remote
  */
 
-/*
- * Example simpleSAMLphp SAML 2.0 SP
- */
 $metadata['dev:kit:appa'] = array (
   'entityid' => 'dev:kit:appa',
   'contacts' => 
@@ -19,14 +16,14 @@ $metadata['dev:kit:appa'] = array (
     0 => 
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
-      'Location' => 'http://frontend:8082/appa/saml/SSO',
+      'Location' => 'http://localhost:8082/appa/saml/SSO',
       'index' => 0,
       'isDefault' => true,
     ),
     1 => 
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact',
-      'Location' => 'http://frontend:8082/appa/saml/SSO',
+      'Location' => 'http://localhost:8082/appa/saml/SSO',
       'index' => 1,
     ),
   ),
@@ -35,12 +32,12 @@ $metadata['dev:kit:appa'] = array (
     0 => 
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
-      'Location' => 'http://frontend:8082/appa/saml/SingleLogout',
+      'Location' => 'http://localhost:8082/appa/saml/SingleLogout',
     ),
     1 => 
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
-      'Location' => 'http://frontend:8082/appa/saml/SingleLogout',
+      'Location' => 'http://localhost:8082/appa/saml/SingleLogout',
     ),
   ),
   'NameIDFormat' => 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',
@@ -108,14 +105,14 @@ $metadata['dev:kit:appb'] = array (
     0 => 
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
-      'Location' => 'http://frontend:8084/appb/saml/SSO',
+      'Location' => 'http://localhost:8084/appb/saml/SSO',
       'index' => 0,
       'isDefault' => true,
     ),
     1 => 
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact',
-      'Location' => 'http://frontend:8084/appb/saml/SSO',
+      'Location' => 'http://localhost:8084/appb/saml/SSO',
       'index' => 1,
     ),
   ),
@@ -124,12 +121,12 @@ $metadata['dev:kit:appb'] = array (
     0 => 
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST',
-      'Location' => 'http://frontend:8084/appb/saml/SingleLogout',
+      'Location' => 'http://localhost:8084/appb/saml/SingleLogout',
     ),
     1 => 
     array (
       'Binding' => 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect',
-      'Location' => 'http://frontend:8084/appb/saml/SingleLogout',
+      'Location' => 'http://localhost:8084/appb/saml/SingleLogout',
     ),
   ),
   'NameIDFormat' => 'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress',

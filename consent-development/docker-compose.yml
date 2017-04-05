@@ -12,11 +12,11 @@ services:
       - IDP_ADMIN_PASSWORD=test123
       - IDP_TECHNICAL_EMAIL=eva@kvalitetsit.dk
       - IDP_SECRET_SALT=abcd23poiu
-      - IDP_HOSTNAME=frontend:8080
+      - IDP_HOSTNAME=localhost:8090
       - IDP_CONTEXTPATH=citizenidp
       - IDP_PROTOCOL=http
      ports:
-      - "8080:80"
+      - "8090:80"
    citizen-consentidp:
      image: kvalitetsit/consent-idp:latest
      volumes:
@@ -28,29 +28,27 @@ services:
       - IDP_ADMIN_PASSWORD=test123
       - IDP_TECHNICAL_EMAIL=eva@kvalitetsit.dk
       - IDP_SECRET_SALT=abcd23poiu
-      - IDP_HOSTNAME=frontend
+      - IDP_HOSTNAME=localhost:8092
       - IDP_CONTEXTPATH=consentidp
       - IDP_PROTOCOL=http
-      - SOURCE_IDP_URL=http://frontend:8080/citizenidp/saml2/idp/metadata.php
+      - SOURCE_IDP_URL=http://localhost:8090/citizenidp/saml2/idp/metadata.php
      ports:
-      - "80:80"
+      - "8092:80"
    mongo:
      image: mongo:3.3
    app-a-saml-sp:
      image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spapp:59eb03a2e9bfedfd4faa4eb70265efc25e61d3e4
-     extra_hosts:
-      - "frontend:172.17.0.1" 
      volumes:
       - ./appa/config:/certificates
      environment:
-      - IDP_METADATA_URL=http://frontend/consentidp/saml2/idp/metadata.php
-      - IDP_LOGIN_URL=http://frontend/consentidp/saml2/idp/SSOService.php  
+      - IDP_METADATA_URL=http://citizen-consentidp/consentidp/saml2/idp/metadata.php
+      - IDP_LOGIN_URL=http://localhost:8092/consentidp/saml2/idp/SSOService.php  
       - SP_IMPORT_KEYSTORE=appa.p12
       - SP_IMPORT_PASSWORD=Test1234
       - SP_IMPORT_ALIAS=appa
       - SP_ENTITY_ID=dev:kit:appa
       - SAML_LB_SCHEME=http
-      - SAML_LB_SERVERNAME=frontend
+      - SAML_LB_SERVERNAME=localhost
       - SAML_LB_SERVERPORT=8082
       - APP_CONTEXT=appa
       - MONGODB=mongo
@@ -72,19 +70,17 @@ services:
       - "8082:80"
    app-b-saml-sp:
      image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spapp:59eb03a2e9bfedfd4faa4eb70265efc25e61d3e4
-     extra_hosts:
-      - "frontend:172.17.0.1"
      volumes:
       - ./appb/config:/certificates
      environment:
-      - IDP_METADATA_URL=http://frontend/consentidp/saml2/idp/metadata.php
-      - IDP_LOGIN_URL=http://frontend/consentidp/saml2/idp/SSOService.php
+      - IDP_METADATA_URL=http://citizen-consentidp/consentidp/saml2/idp/metadata.php
+      - IDP_LOGIN_URL=http://localhost:8092/consentidp/saml2/idp/SSOService.php
       - SP_IMPORT_KEYSTORE=appb.p12
       - SP_IMPORT_PASSWORD=Test1234
       - SP_IMPORT_ALIAS=appb
       - SP_ENTITY_ID=dev:kit:appb
       - SAML_LB_SCHEME=http
-      - SAML_LB_SERVERNAME=frontend
+      - SAML_LB_SERVERNAME=localhost
       - SAML_LB_SERVERPORT=8084
       - APP_CONTEXT=appb
       - MONGODB=mongo
