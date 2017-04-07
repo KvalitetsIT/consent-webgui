@@ -509,8 +509,13 @@ $config = array(
             'checked' => TRUE
         ),*/
         
-        90 => array(
+		 90 => array(
             'class' => 'consent:Consent',
+            'store' => array(
+                'consent:ConsentService',
+                'consentserviceurl' => 'http://172.17.0.1:8020/api/consent',
+                'useridattr' => 'urn:dk:gov:saml:cprNumberIdentification',
+            ),
         ),
          
         // If language is set in Consent module it will be added as an attribute.

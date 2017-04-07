@@ -115,5 +115,6 @@
 	</build>
 	<modules>
 		<module>consent-idp</module>
+		<module>consent-service</module>
 	</modules>
 </project>

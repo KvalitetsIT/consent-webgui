@@ -18,5 +18,12 @@ ADD authsources.php /var/simplesamlphp/config-templates/
 ADD saml20-idp-hosted.php /var/simplesamlphp/metadata-templates/
 
 RUN touch /var/simplesamlphp/modules/consent/enable
+ADD modules/consent/ConsentService.php /var/simplesamlphp/modules/consent/lib/Consent/Store
+ADD modules/consent/Consent.php /var/simplesamlphp/modules/consent/lib/Auth/Process
+ADD modules/consent/Store.php /var/simplesamlphp/modules/consent/lib
+ADD modules/consent/getconsent.php /var/simplesamlphp/modules/consent/www
+
+RUN touch /eva.txt
+RUN chmod 777 /eva.txt
 
 ENTRYPOINT ["/entrypoint.sh"]
