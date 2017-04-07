@@ -26,6 +26,8 @@ grep -rl auth /var/simplesamlphp/metadata/saml20-idp-hosted.php | xargs sed -i "
 # Configure apache
 envsubst < /templates/apache2.conf > /etc/apache2/apache2.conf
 sed -i "s|SOURCE_IDP_URL|$SOURCE_IDP_URL|g" /var/simplesamlphp/config/authsources.php
+sed -i "s|__CONSENT_SERVICE_URL__|$CONSENT_SERVICE_URL|g" /var/simplesamlphp/config/config.php
+sed -i "s|__USER_ID_ATTR__|$USER_ID_ATTR|g" /var/simplesamlphp/config/config.php
 
 # check that is set SOURCE_IDP_URL
 

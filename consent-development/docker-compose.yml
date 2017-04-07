@@ -32,8 +32,12 @@ services:
       - IDP_CONTEXTPATH=consentidp
       - IDP_PROTOCOL=http
       - SOURCE_IDP_URL=http://localhost:8090/citizenidp/saml2/idp/metadata.php
+      - CONSENT_SERVICE_URL=http://consentservice/api/consent
+      - USER_ID_ATTR=urn:dk:gov:saml:cprNumberIdentification
      ports:
       - "8092:80"
+   consentservice:
+     image: kvalitetsit/consent-service:latest
    mongo:
      image: mongo:3.3
    app-a-saml-sp:

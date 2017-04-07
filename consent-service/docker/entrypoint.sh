@@ -20,6 +20,11 @@ if [[ -z $LOG_LEVEL ]]; then
   export LOG_LEVEL=INFO
 fi
 
+if [[ -z $SERVER_PORT ]]; then
+  echo "Default SERVER_PORT = 80"
+  export SERVER_PORT=80
+fi
+
 if [[ -z $CORRELATION_ID ]]; then
   echo "Default CORRELATION_ID = correlation-id"
   export CORRELATION_ID=correlation-id

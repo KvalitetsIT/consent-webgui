@@ -513,8 +513,8 @@ $config = array(
             'class' => 'consent:Consent',
             'store' => array(
                 'consent:ConsentService',
-                'consentserviceurl' => 'http://172.17.0.1:8020/api/consent',
-                'useridattr' => 'urn:dk:gov:saml:cprNumberIdentification',
+                'consentserviceurl' => '__CONSENT_SERVICE_URL__',
+                'useridattr' => '__USER_ID_ATTR__',
             ),
         ),
          
