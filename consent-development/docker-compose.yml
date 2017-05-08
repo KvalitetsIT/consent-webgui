@@ -41,7 +41,7 @@ services:
    mongo:
      image: mongo:3.3
    app-a-saml-sp:
-     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spapp:714fed014be5d092bf64b6a4f8639b4b23833b99
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spapp:efdd0ca4ca9723ebf0d97316b047e306b597b1f0
      volumes:
       - ./appa/config:/certificates
      environment:
@@ -57,11 +57,11 @@ services:
       - MONGODB=mongo
       - MONGODB_DATABASE=mongo_appa
    app-a:
-     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spviewer:714fed014be5d092bf64b6a4f8639b4b23833b99
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spviewer:efdd0ca4ca9723ebf0d97316b047e306b597b1f0
      environment:
       - PROXY_HOST=app-a-sp-proxy
    app-a-sp-proxy:
-     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spproxy:714fed014be5d092bf64b6a4f8639b4b23833b99
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spproxy:efdd0ca4ca9723ebf0d97316b047e306b597b1f0
      environment:
       - ENDPOINT_URL=http://app-a:8080/
       - SAML_URL=http://app-a-saml-sp:8080/
@@ -72,7 +72,7 @@ services:
      ports:
       - "8082:80"
    app-b-saml-sp:
-     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spapp:714fed014be5d092bf64b6a4f8639b4b23833b99
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spapp:efdd0ca4ca9723ebf0d97316b047e306b597b1f0
      volumes:
       - ./appb/config:/certificates
      environment:
@@ -88,11 +88,11 @@ services:
       - MONGODB=mongo
       - MONGODB_DATABASE=mongo_appb
    app-b:
-     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spviewer:714fed014be5d092bf64b6a4f8639b4b23833b99
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spviewer:efdd0ca4ca9723ebf0d97316b047e306b597b1f0
      environment:
       - PROXY_HOST=app-b-sp-proxy
    app-b-sp-proxy:
-     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spproxy:714fed014be5d092bf64b6a4f8639b4b23833b99
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spproxy:efdd0ca4ca9723ebf0d97316b047e306b597b1f0
      environment:
       - ENDPOINT_URL=http://app-b:8080/
       - SAML_URL=http://app-b-saml-sp:8080/
