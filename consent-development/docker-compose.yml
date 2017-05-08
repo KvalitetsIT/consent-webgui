@@ -41,15 +41,14 @@ services:
    mongo:
      image: mongo:3.3
    app-a-saml-sp:
-     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spapp:59eb03a2e9bfedfd4faa4eb70265efc25e61d3e4
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spapp:714fed014be5d092bf64b6a4f8639b4b23833b99
      volumes:
       - ./appa/config:/certificates
      environment:
       - IDP_METADATA_URL=http://citizen-consentidp/consentidp/saml2/idp/metadata.php
       - IDP_LOGIN_URL=http://localhost:8092/consentidp/saml2/idp/SSOService.php  
-      - SP_IMPORT_KEYSTORE=appa.p12
-      - SP_IMPORT_PASSWORD=Test1234
-      - SP_IMPORT_ALIAS=appa
+      - CERTIFICATE=/certificates/appa.cert
+      - KEY=/certificates/appa.pem
       - SP_ENTITY_ID=dev:kit:appa
       - SAML_LB_SCHEME=http
       - SAML_LB_SERVERNAME=localhost
@@ -58,13 +57,13 @@ services:
       - MONGODB=mongo
       - MONGODB_DATABASE=mongo_appa
    app-a:
-     image: nginx:1.11.12-alpine
-     volumes:
-      - ./appa/html:/usr/share/nginx/html/appa:ro
-   app-a-sp-proxy:
-     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spproxy:59eb03a2e9bfedfd4faa4eb70265efc25e61d3e4
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spviewer:714fed014be5d092bf64b6a4f8639b4b23833b99
      environment:
-      - ENDPOINT_URL=http://app-a/
+      - PROXY_HOST=app-a-sp-proxy
+   app-a-sp-proxy:
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spproxy:714fed014be5d092bf64b6a4f8639b4b23833b99
+     environment:
+      - ENDPOINT_URL=http://app-a:8080/
       - SAML_URL=http://app-a-saml-sp:8080/
       - CONTEXT=appa
       - MONGODB=mongo
@@ -73,15 +72,14 @@ services:
      ports:
       - "8082:80"
    app-b-saml-sp:
-     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spapp:59eb03a2e9bfedfd4faa4eb70265efc25e61d3e4
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spapp:714fed014be5d092bf64b6a4f8639b4b23833b99
      volumes:
       - ./appb/config:/certificates
      environment:
       - IDP_METADATA_URL=http://citizen-consentidp/consentidp/saml2/idp/metadata.php
       - IDP_LOGIN_URL=http://localhost:8092/consentidp/saml2/idp/SSOService.php
-      - SP_IMPORT_KEYSTORE=appb.p12
-      - SP_IMPORT_PASSWORD=Test1234
-      - SP_IMPORT_ALIAS=appb
+      - CERTIFICATE=/certificates/appb.cert
+      - KEY=/certificates/appb.pem
       - SP_ENTITY_ID=dev:kit:appb
       - SAML_LB_SCHEME=http
       - SAML_LB_SERVERNAME=localhost
@@ -90,13 +88,13 @@ services:
       - MONGODB=mongo
       - MONGODB_DATABASE=mongo_appb
    app-b:
-     image: nginx:1.11.12-alpine
-     volumes:
-      - ./appb/html:/usr/share/nginx/html/appb:ro
-   app-b-sp-proxy:
-     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spproxy:59eb03a2e9bfedfd4faa4eb70265efc25e61d3e4
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spviewer:714fed014be5d092bf64b6a4f8639b4b23833b99
      environment:
-      - ENDPOINT_URL=http://app-b/
+      - PROXY_HOST=app-b-sp-proxy
+   app-b-sp-proxy:
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/serviceprovider-spproxy:714fed014be5d092bf64b6a4f8639b4b23833b99
+     environment:
+      - ENDPOINT_URL=http://app-b:8080/
       - SAML_URL=http://app-b-saml-sp:8080/
       - CONTEXT=appb
       - MONGODB=mongo
