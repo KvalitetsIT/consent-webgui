@@ -2,23 +2,36 @@ package dk.kvalitetsit.consentservice.dto;
 
 public class ConsentStatus {
 
-	public String consentTemplateId;
+	public enum Status { ACCEPTED, NOT_ACCEPTED, UNANSWERED };
+	
+	public String templateContent;
+	
+	public String templateMimeType;
 
-	public Boolean consent;
+	public Status status;
 
-	public String getConsentTemplateId() {
-		return consentTemplateId;
+	public String getTemplateContent() {
+		return templateContent;
 	}
 
-	public void setConsentTemplateId(String consentTemplateId) {
-		this.consentTemplateId = consentTemplateId;
+	public void setTemplateContent(String templateContent) {
+		this.templateContent = templateContent;
 	}
 
-	public Boolean getConsent() {
-		return consent;
+	public String getTemplateMimeType() {
+		return templateMimeType;
 	}
 
-	public void setConsent(Boolean consent) {
-		this.consent = consent;
+	public void setTemplateMimeType(String templateMimeType) {
+		this.templateMimeType = templateMimeType;
 	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 }

@@ -1,0 +1,1 @@
+INSERT INTO consent_template (app_id, mime_type, content) VALUES( "dev:kit:appa" , "application/pdf" , "bla bla bla" );
