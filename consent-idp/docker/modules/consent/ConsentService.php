@@ -81,11 +81,12 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
         $this->log('http kode fra service:'.$httpcode);
         // TODO tjek assert('$httpcode == 200');
 
-       	$consent = $result->{'consent'};
-       	$templateid = $result->{'consentTemplateId'};
-        $this->log('httpcode:'.$httpcode.' templateid:'.$templateid.' consent:'.$consent);
+       	$status = $result->{'status'};
        	
-        return $consent == true; 	    
+       	//$templateid = $result->{'consentTemplateId'};
+        //$this->log('httpcode:'.$httpcode.' templateid:'.$templateid.' consent:'.$consent);
+       	
+        return ($status == 'ACCEPTED'); 	    
     }
 
     /**
