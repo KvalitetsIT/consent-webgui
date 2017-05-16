@@ -22,6 +22,8 @@ ADD modules/consent/ConsentService.php /var/simplesamlphp/modules/consent/lib/Co
 ADD modules/consent/Consent.php /var/simplesamlphp/modules/consent/lib/Auth/Process
 ADD modules/consent/Store.php /var/simplesamlphp/modules/consent/lib
 ADD modules/consent/getconsent.php /var/simplesamlphp/modules/consent/www
+ADD modules/consent/getconsenttemplate.php /var/simplesamlphp/modules/consent/www
+ADD modules/consent/consentform.php /var/simplesamlphp/modules/consent/templates
 
 RUN touch /eva.txt
 RUN chmod 777 /eva.txt

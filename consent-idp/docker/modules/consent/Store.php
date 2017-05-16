@@ -21,7 +21,7 @@ abstract class sspmod_consent_Store
         assert('is_array($config)');
     }
 
-    public function hasConsentMore($userId, $destinationId, $attributeSet, $state) {
+    public function hasConsentMore($userId, $destinationId, $attributeSet, &$state) {
 		hasConsent($userId, $destinationId, $attributeSet);
 	}
 

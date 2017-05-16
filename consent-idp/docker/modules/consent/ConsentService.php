@@ -51,7 +51,7 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
      * @return bool True if the user has given consent earlier, false if not
      *              (or on error).
      */
-    public function hasConsentMore($userId, $destinationId, $attributeSet, $state)
+    public function hasConsentMore($userId, $destinationId, $attributeSet, &$state)
     {
         assert('is_string($userId)');
         assert('is_string($destinationId)');
@@ -85,6 +85,11 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
        	
        	//$templateid = $result->{'consentTemplateId'};
         //$this->log('httpcode:'.$httpcode.' templateid:'.$templateid.' consent:'.$consent);
+       	
+       	if ($status == 'UNANSWERED') {
+       		$state['consent:template.content'] =  $result->{'templateContent'};
+       		$state['consent:template.mimetype'] = $result->{'templateMimeType'};       	
+       	}   	
        	
         return ($status == 'ACCEPTED'); 	    
     }

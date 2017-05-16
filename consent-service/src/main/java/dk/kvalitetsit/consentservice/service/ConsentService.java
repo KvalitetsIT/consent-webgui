@@ -20,7 +20,13 @@ public class ConsentService {
 	ConsentTemplateRepository consentTemplateRepository;
 	
 	public ConsentStatus getConsentStatus(String userId, String appId) throws ConsentServiceException {
-		ConsentTemplate template = getTemplate(appId);
+		ConsentTemplate template = consentTemplateRepository.findByAppId(appId);
+		if (template == null) {
+			//No consent configured for this appid - allow user to continue;
+			ConsentStatus rv = new ConsentStatus();
+			rv.setStatus(Status.ACCEPTED);
+			return rv;
+		}
 		Consent consent = getConsentForTemplateAndUser(template, userId);
 		ConsentStatus rv = new ConsentStatus();
 		if (consent == null) {
