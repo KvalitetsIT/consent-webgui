@@ -89,12 +89,6 @@ if (array_key_exists('descr_purpose', $this->data['dstMetadata'])) {
 <p style="margin: 1em">
 
 <?php
-if ($this->data['usestorage']) {
-    $checked = ($this->data['checked'] ? 'checked="checked"' : '');
-    echo '<input type="checkbox" name="saveconsent" ' . $checked .
-        ' value="1" /> ' . $this->t('{consent:consent:remember}');
-}
-
 // Embed hidden fields...
 foreach ($this->data['yesData'] as $name => $value) {
     echo '<input type="hidden" name="' . htmlspecialchars($name) .
