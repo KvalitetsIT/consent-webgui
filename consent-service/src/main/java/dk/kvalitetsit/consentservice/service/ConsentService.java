@@ -19,6 +19,9 @@ public class ConsentService {
 	@Autowired
 	ConsentTemplateRepository consentTemplateRepository;
 	
+	@Autowired
+	ConsentNotificationService notificationService;
+	
 	public ConsentStatus getConsentStatus(String userId, String appId) throws ConsentServiceException {
 		ConsentTemplate template = consentTemplateRepository.findByAppId(appId);
 		if (template == null) {
@@ -55,7 +58,11 @@ public class ConsentService {
 			newConsent.setConsentTemplate(template);
 			newConsent.setCitizenId(userId);
 			consentRepository.save(newConsent);
-		}		
+		}
+		
+		if (consent) {
+			notificationService.sendNotification(userId, appId, template.getMimeType(), template.getContent() );
+		}
 	}
 	
 	private ConsentTemplate getTemplate(String appId) throws ConsentServiceException {

@@ -1,0 +1,5 @@
+Build: docker build -t kihindexadapter/rabbitmq .
+
+Run: docker run -t -p 15672:15672 -e RABBITMQ_DEFAULT_VHOST=/ kihindexadapter/rabbitmq
+
+You can access the console in a browser at http://localhost:15672. Here you can inspect the queues and publish new messages to the exchange

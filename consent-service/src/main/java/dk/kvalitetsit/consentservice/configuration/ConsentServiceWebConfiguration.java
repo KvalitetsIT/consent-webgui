@@ -2,12 +2,14 @@ package dk.kvalitetsit.consentservice.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import dk.kvalitetsit.consentservice.service.ConsentNotificationService;
 import dk.kvalitetsit.consentservice.util.LoggingInterceptor;
 
 @Configuration
@@ -16,6 +18,9 @@ public class ConsentServiceWebConfiguration extends WebMvcConfigurerAdapter {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(ConsentServiceWebConfiguration.class);
 
+	@Value("${notificationservice.url}")
+	private String notificationServiceUrl;
+	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		LOGGER.debug("Adding interceptors");
@@ -27,4 +32,11 @@ public class ConsentServiceWebConfiguration extends WebMvcConfigurerAdapter {
 		LOGGER.debug("Creating loggingInterceptor");
 		return new LoggingInterceptor();
 	}
+	
+	@Bean
+	public ConsentNotificationService consentNotificationService() {
+		ConsentNotificationService consentNotificationService = new ConsentNotificationService(notificationServiceUrl); 
+		return consentNotificationService;
+	}
+	
 }
