@@ -23,6 +23,13 @@ grep -rl logging.logfile /var/simplesamlphp/config/config.php | xargs sed -i "s/
 grep -rl session.cookie.path /var/simplesamlphp/config/config.php | xargs sed -i "s/'session.cookie.path' => '\/',/'session.cookie.path' => '\/${IDP_CONTEXTPATH}\/',/g"
 grep -rl auth /var/simplesamlphp/metadata/saml20-idp-hosted.php | xargs sed -i "s/example-userpass/default-sp/g"
 
+if [[ -z $IDP_THEME ]]; then 
+  echo "using default theme"
+else
+  echo "using theme: $IDP_THEME"
+  grep -rl theme.use /var/simplesamlphp/config/config.php | xargs sed -i "s/'theme.use.*'/'theme.use' => '\/${IDP_THEME}\/'/g"
+fi
+
 # Configure apache
 envsubst < /templates/apache2.conf > /etc/apache2/apache2.conf
 sed -i "s|SOURCE_IDP_URL|$SOURCE_IDP_URL|g" /var/simplesamlphp/config/authsources.php

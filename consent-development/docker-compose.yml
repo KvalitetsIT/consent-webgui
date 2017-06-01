@@ -1,7 +1,14 @@
 version: '2'
 services:
+   kitidp-theme:
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/simpleidp-theme:216dc29366c81841266ee8ea7b44133d69bb10f9
    citizen-simpleidp:
-     image: kitdocker.kvalitetsit.dk/kvalitetsit/simpleidp:f8db175484b169ddfb0444450f89e1b498cea3ba
+     image: kitdocker.kvalitetsit.dk/kvalitetsit/simpleidp:216dc29366c81841266ee8ea7b44133d69bb10f9
+     entrypoint: bash -c " ln -nsf /kitmodule /var/simplesamlphp/modules/kitmodule; /entrypoint.sh"
+     depends_on:
+      - kitidp-theme
+     volumes_from:
+      - kitidp-theme
      volumes:
       - ./citizenidp/cert:/cert
       - ./citizenidp/citizenidp-metadata:/metadata
@@ -15,10 +22,16 @@ services:
       - IDP_HOSTNAME=localhost:8090
       - IDP_CONTEXTPATH=citizenidp
       - IDP_PROTOCOL=http
+      - IDP_THEME=kitmodule:kittheme
      ports:
       - "8090:80"
    citizen-consentidp:
      image: kvalitetsit/consent-idp:latest
+     entrypoint: bash -c " ln -nsf /kitmodule /var/simplesamlphp/modules/kitmodule; /entrypoint.sh"
+     depends_on:
+      - kitidp-theme
+     volumes_from:
+      - kitidp-theme
      volumes:
       - ./consentidp/cert:/cert
       - ./consentidp/consentidp-metadata:/metadata
@@ -34,6 +47,7 @@ services:
       - SOURCE_IDP_URL=http://localhost:8090/citizenidp/saml2/idp/metadata.php
       - CONSENT_SERVICE_URL=http://consentservice/api/consent
       - USER_ID_ATTR=urn:dk:gov:saml:cprNumberIdentification
+      - IDP_THEME=kitmodule:kittheme
      ports:
       - "8092:80"
    consentservice:
