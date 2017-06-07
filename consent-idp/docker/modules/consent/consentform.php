@@ -96,7 +96,7 @@ foreach ($this->data['yesData'] as $name => $value) {
 }
 ?>
     </p>
-    <input type="submit" name="yes" id="yesbutton" value="<?php echo htmlspecialchars($this->t('{consent:consent:yes}')) ?>" />
+    <input type="submit" name="yes" class="btn btn-primary" id="yesbutton" value="<?php echo htmlspecialchars($this->t('{consent:consent:yes}')) ?>" />
 </form>
 
 <form style="display: inline; margin-left: .5em;" action="<?php echo htmlspecialchars($this->data['noTarget']); ?>" method="get">
@@ -107,120 +107,13 @@ foreach ($this->data['noData'] as $name => $value) {
         '" value="' . htmlspecialchars($value) . '" />');
 }
 ?>
-    <input type="submit" style="display: inline" name="no" id="nobutton" value="<?php echo htmlspecialchars($this->t('{consent:consent:no}')) ?>" />
+    <input type="submit" style="display: inline" class="btn btn-default" name="no" id="nobutton" value="<?php echo htmlspecialchars($this->t('{consent:consent:no}')) ?>" />
 </form>
 
 <?php
 
-if ($this->data['sppp'] !== false) {
-    echo "<p>" . htmlspecialchars($this->t('{consent:consent:consent_privacypolicy}')) . " ";
-    echo "<a target='_blank' href='" . htmlspecialchars($this->data['sppp']) . "'>" . $dstName . "</a>";
-    echo "</p>";
-}
 
 
-    echo "<a target='_blank' href='getconsenttemplate.php?StateId=".$_REQUEST['StateId']."'>OPEN DOCUMENT</a>";
-
-
-/**
- * Recursiv attribute array listing function
- *
- * @param SimpleSAML_XHTML_Template $t          Template object
- * @param array                     $attributes Attributes to be presented
- * @param string                    $nameParent Name of parent element
- *
- * @return string HTML representation of the attributes 
- */
-function present_attributes($t, $attributes, $nameParent)
-{
-    $alternate = array('odd', 'even');
-    $i = 0;
-    $summary = 'summary="' . $t->t('{consent:consent:table_summary}') . '"';
-
-    if (strlen($nameParent) > 0) {
-        $parentStr = strtolower($nameParent) . '_';
-        $str = '<table class="attributes" ' . $summary . '>';
-    } else {
-        $parentStr = '';
-        $str = '<table id="table_with_attributes"  class="attributes" '. $summary .'>';
-        $str .= "\n" . '<caption>' . $t->t('{consent:consent:table_caption}') .
-            '</caption>';
-    }
-
-    foreach ($attributes as $name => $value) {
-        $nameraw = $name;
-        $name = $t->getAttributeTranslation($parentStr . $nameraw);
-
-        if (preg_match('/^child_/', $nameraw)) {
-            // Insert child table
-            $parentName = preg_replace('/^child_/', '', $nameraw);
-            foreach ($value AS $child) {
-                $str .= "\n" . '<tr class="odd"><td style="padding: 2em">' .
-                    present_attributes($t, $child, $parentName) . '</td></tr>';
-            }
-        } else {
-            // Insert values directly
-
-            $str .= "\n" . '<tr class="' . $alternate[($i++ % 2)] .
-                '"><td><span class="attrname">' . htmlspecialchars($name) . '</span>';
-
-            $isHidden = in_array($nameraw, $t->data['hiddenAttributes'], true);
-            if ($isHidden) {
-                $hiddenId = SimpleSAML_Utilities::generateID();
-
-                $str .= '<div class="attrvalue" style="display: none;" id="hidden_' . $hiddenId . '">';
-            } else {
-                $str .= '<div class="attrvalue">';
-            }
-
-            if (sizeof($value) > 1) {
-                // We hawe several values
-                $str .= '<ul>';
-                foreach ($value AS $listitem) {
-                    if ($nameraw === 'jpegPhoto') {
-                        $str .= '<li><img src="data:image/jpeg;base64,' .
-                            htmlspecialchars($listitem) .
-                            '" alt="User photo" /></li>';
-                    } else {
-                        $str .= '<li>' . htmlspecialchars($listitem) . '</li>';
-                    }
-                }
-                $str .= '</ul>';
-            } elseif (isset($value[0])) {
-                // We hawe only one value
-                if ($nameraw === 'jpegPhoto') {
-                    $str .= '<img src="data:image/jpeg;base64,' .
-                        htmlspecialchars($value[0]) .
-                        '" alt="User photo" />';
-                } else {
-                    $str .= htmlspecialchars($value[0]);
-                }
-            }	// end of if multivalue
-            $str .= '</div>';
-
-            if ($isHidden) {
-                $str .= '<div class="attrvalue consent_showattribute" id="visible_' . $hiddenId . '">';
-                $str .= '... ';
-                $str .= '<a class="consent_showattributelink" href="javascript:SimpleSAML_show(\'hidden_' . $hiddenId . '\'); SimpleSAML_hide(\'visible_' . $hiddenId . '\');">';
-                $str .= $t->t('{consent:consent:show_attribute}');
-                $str .= '</a>';
-                $str .= '</div>';
-            }
-
-            $str .= '</td></tr>';
-        }	// end else: not child table
-    }	// end foreach
-    $str .= isset($attributes)? '</table>':'';
-    return $str;
-}
-
-echo '<h3 id="attributeheader">' .
-    $this->t(
-        '{consent:consent:consent_attributes_header}',
-        array( 'SPNAME' => $dstName, 'IDPNAME' => $srcName)
-    ) .
-    '</h3>';
-
-echo(present_attributes($this, $attributes, '')); 
+    echo "<a target='_blank' class='btn btn-default' href='getconsenttemplate.php?StateId=".$_REQUEST['StateId']."'>".$this->t('{consent:consent:seeconsent}')."</a>";
 
 $this->includeAtTemplateBase('includes/footer.php');

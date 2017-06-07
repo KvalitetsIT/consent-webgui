@@ -24,8 +24,8 @@ ADD modules/consent/Store.php /var/simplesamlphp/modules/consent/lib
 ADD modules/consent/getconsent.php /var/simplesamlphp/modules/consent/www
 ADD modules/consent/getconsenttemplate.php /var/simplesamlphp/modules/consent/www
 ADD modules/consent/consentform.php /var/simplesamlphp/modules/consent/templates
-
-RUN touch /eva.txt
-RUN chmod 777 /eva.txt
+ADD modules/consent/noconsent.php /var/simplesamlphp/modules/consent/templates
+ADD modules/consent/logout_completed.php /var/simplesamlphp/modules/consent/templates
+ADD modules/consent/consent.definition.json /var/simplesamlphp/modules/consent/dictionaries
 
 ENTRYPOINT ["/entrypoint.sh"]

@@ -69,7 +69,6 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
         
         $qry_str = '?userId='.$citizenId.'&appId='.$spId;
         $serviceurl = $this->_consentserviceurl.$qry_str;
-        $this->log('serviceurl'.$serviceurl);
         
         $curl = curl_init($serviceurl); 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -78,13 +77,10 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
        	$httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $result = json_decode($curl_response);
        	curl_close($curl);
-        $this->log('http kode fra service:'.$httpcode);
         // TODO tjek assert('$httpcode == 200');
 
        	$status = $result->{'status'};
        	
-       	//$templateid = $result->{'consentTemplateId'};
-        //$this->log('httpcode:'.$httpcode.' templateid:'.$templateid.' consent:'.$consent);
        	
        	if ($status == 'UNANSWERED') {
        		$state['consent:template.content'] =  $result->{'templateContent'};
@@ -111,7 +107,6 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
         assert('is_string($userId)');
         assert('is_string($destinationId)');
         assert('is_string($attributeSet)');
-        $this->log('saveConsent');
 
         return saveConsentMore($userId, $destinationId, $attributeSet, array());
     }
@@ -121,7 +116,6 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
         assert('is_string($userId)');
         assert('is_string($destinationId)');
         assert('is_string($attributeSet)');
-        $this->log('saveConsentMore userid '.$userId.' attr:'.$this->_useridattr);
 
         $attributeSet = $state['Attributes'];
         $citizenIdArray = $attributeSet[$this->_useridattr];
@@ -131,7 +125,6 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
         }
         
         $spId = $state['core:SP'];
-        $this->log('scm citizenId:'.$citizenId.' templateId:'.$spId);
         
         $updateConsent = array(
     		"userId" => $citizenId,
@@ -139,7 +132,6 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
     		"consent" => "true"
 		);
 		$jsonConsent = json_encode($this->utf8ize($updateConsent));
-        $this->log('encode json done '.$jsonConsent.' err'.json_last_error());
         
         $serviceurl = $this->_consentserviceurl;
         $curl = curl_init($serviceurl); 
@@ -154,8 +146,6 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
 
        	$httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
        	curl_close($curl);
-        $this->log('http kode fra service:'.$httpcode);
-        // TODO tjek assert('$httpcode == 200');
 
         return true;
     }
@@ -205,14 +195,6 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
         assert('is_string($userId)');
 
     }
-    
-    public function log($test) {
-    
- 	   $file = fopen('/eva.txt', 'a');
-    	fwrite($file, $test . "\n");
-		fclose($file);
-    }
-    
     public function utf8ize($d) { 
     	if (is_array($d) || is_object($d))
     	    foreach ($d as &$v) $v = $this->utf8ize($v);
