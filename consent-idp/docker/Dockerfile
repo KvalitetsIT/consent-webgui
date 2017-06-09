@@ -27,5 +27,6 @@ ADD modules/consent/consentform.php /var/simplesamlphp/modules/consent/templates
 ADD modules/consent/noconsent.php /var/simplesamlphp/modules/consent/templates
 ADD modules/consent/logout_completed.php /var/simplesamlphp/modules/consent/templates
 ADD modules/consent/consent.definition.json /var/simplesamlphp/modules/consent/dictionaries
+ADD modules/consent/jquery-1.11.3.min.js /var/simplesamlphp/modules/consent/www
 
 ENTRYPOINT ["/entrypoint.sh"]

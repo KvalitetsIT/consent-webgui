@@ -55,8 +55,11 @@ $dstName = htmlspecialchars($dstName);
 $attributes = $this->data['attributes'];
 
 $this->data['header'] = $this->t('{consent:consent:consent_header}');
-$this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' .
-    $this->data['baseurlpath'] . 'module.php/consent/style.css" />' . "\n";
+
+$head = '<link rel="stylesheet" type="text/css" href="/'.$this->data['baseurlpath'].'module.php/consent/style.css" />'."\n";
+$head = $head.'<script src="/'.$this->data['baseurlpath'].'module.php/consent/jquery-1.11.3.min.js"></script>';
+
+$this->data['head']  = $head;
 
 $this->includeAtTemplateBase('includes/header.php');
 ?>
@@ -65,7 +68,7 @@ $this->includeAtTemplateBase('includes/header.php');
 <?php
 echo $this->t(
     '{consent:consent:consent_accept}',
-    array( 'SPNAME' => $dstName, 'IDPNAME' => $srcName)
+    array( 'SPNAME' => $dstName )
 );
 
 if (array_key_exists('descr_purpose', $this->data['dstMetadata'])) {
@@ -110,10 +113,24 @@ foreach ($this->data['noData'] as $name => $value) {
     <input type="submit" style="display: inline" class="btn btn-default" name="no" id="nobutton" value="<?php echo htmlspecialchars($this->t('{consent:consent:no}')) ?>" />
 </form>
 
+<script>
+	$(document).ready(function() {		
+		$('#yesbutton').prop('disabled', true);
+		
+		$('#seeconsentbutton').click(function () {
+			$('#yesbutton').prop('disabled', false);
+		});
+		
+	});
+	
+	
+	
+</script>
+
 <?php
 
-
-
-    echo "<a target='_blank' class='btn btn-default' href='getconsenttemplate.php?StateId=".$_REQUEST['StateId']."'>".$this->t('{consent:consent:seeconsent}')."</a>";
+echo "<a target='_blank' id='seeconsentbutton' class='btn btn-default' href='getconsenttemplate.php?StateId=".$_REQUEST['StateId']."'>".$this->t('{consent:consent:seeconsent}')."</a>";
 
 $this->includeAtTemplateBase('includes/footer.php');
+
+?>

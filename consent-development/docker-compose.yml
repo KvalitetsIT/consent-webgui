@@ -1,7 +1,7 @@
 version: '2'
 services:
    kitidp-theme:
-     image: kitdocker.kvalitetsit.dk/kvalitetsit/simpleidp-theme:216dc29366c81841266ee8ea7b44133d69bb10f9
+     image: kvalitetsit/simpleidp-theme:latest
    citizen-simpleidp:
      image: kitdocker.kvalitetsit.dk/kvalitetsit/simpleidp:216dc29366c81841266ee8ea7b44133d69bb10f9
      entrypoint: bash -c " ln -nsf /kitmodule /var/simplesamlphp/modules/kitmodule; /entrypoint.sh"
