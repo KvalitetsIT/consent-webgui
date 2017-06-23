@@ -121,59 +121,11 @@ $config = array(
      * Options: [syslog,file,errorlog]
      *
      */
-    'logging.level' => SimpleSAML_Logger::NOTICE,
-    'logging.handler' => 'syslog',
+     
+    'logging.level' => SimpleSAML_Logger::DEBUG,
+    'logging.handler' => 'stdout',
+	'logging.format' => '{"@timestamp":"%time","service":"consentidp","logger":"LoggingHandlerSystemOut","level":"%level","correlation-id":"%correlationid","thread":"%trackid","message":"%msg"}',
 
-    /*
-     * Specify the format of the logs. Its use varies depending on the log handler used (for instance, you cannot
-     * control here how dates are displayed when using the syslog or errorlog handlers), but in general the options
-     * are:
-     *
-     * - %date{<format>}: the date and time, with its format specified inside the brackets. See the PHP documentation
-     *   of the strftime() function for more information on the format. If the brackets are omitted, the standard
-     *   format is applied. This can be useful if you just want to control the placement of the date, but don't care
-     *   about the format.
-     *
-     * - %process: the name of the SimpleSAMLphp process. Remember you can configure this in the 'logging.processname'
-     *   option below.
-     *
-     * - %level: the log level (name or number depending on the handler used).
-     *
-     * - %stat: if the log entry is intended for statistical purposes, it will print the string 'STAT ' (bear in mind
-     *   the trailing space).
-     *
-     * - %trackid: the track ID, an identifier that allows you to track a single session.
-     *
-     * - %srcip: the IP address of the client. If you are behind a proxy, make sure to modify the
-     *   $_SERVER['REMOTE_ADDR'] variable on your code accordingly to the X-Forwarded-For header.
-     *
-     * - %msg: the message to be logged.
-     *
-     */
-    //'logging.format' => '%date{%b %d %H:%M:%S} %process %level %stat[%trackid] %msg',
-
-    /*
-     * Choose which facility should be used when logging with syslog.
-     *
-     * These can be used for filtering the syslog output from simpleSAMLphp into its
-     * own file by configuring the syslog daemon.
-     *
-     * See the documentation for openlog (http://php.net/manual/en/function.openlog.php) for available
-     * facilities. Note that only LOG_USER is valid on windows.
-     *
-     * The default is to use LOG_LOCAL5 if available, and fall back to LOG_USER if not.
-     */
-    'logging.facility' => defined('LOG_LOCAL5') ? constant('LOG_LOCAL5') : LOG_USER,
-
-    /*
-     * The process name that should be used when logging to syslog.
-     * The value is also written out by the other logging handlers.
-     */
-    'logging.processname' => 'simplesamlphp',
-
-    /* Logging: file - Logfilename in the loggingdir from above.
-     */
-    'logging.logfile' => 'simplesamlphp.log',
 
     /* (New) statistics output configuration.
      *
