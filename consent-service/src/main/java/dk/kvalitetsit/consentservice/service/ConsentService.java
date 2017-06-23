@@ -1,5 +1,7 @@
 package dk.kvalitetsit.consentservice.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import dk.kvalitetsit.consentservice.repository.ConsentTemplateRepository;
 @Service
 public class ConsentService {
 
+	private static Logger LOGGER = LoggerFactory.getLogger(ConsentService.class);
+	
 	@Autowired
 	ConsentRepository consentRepository;
 	
@@ -23,6 +27,7 @@ public class ConsentService {
 	ConsentNotificationService notificationService;
 	
 	public ConsentStatus getConsentStatus(String userId, String appId) throws ConsentServiceException {
+		LOGGER.info("Checking consent for: " + appId);
 		ConsentTemplate template = consentTemplateRepository.findByAppId(appId);
 		if (template == null) {
 			//No consent configured for this appid - allow user to continue;
