@@ -17,7 +17,7 @@ $this->data['header'] = $this->t('{consent:consent:noconsent_title}');;
 
 $this->includeAtTemplateBase('includes/header.php');
 
-echo '<p>' . $this->t('{consent:consent:noconsent_text}', array('SPNAME' => $dstName)) . '</p>';
+echo '<p>' . $this->t('{consent:consent:noconsent_text}') . '</p>';
 
 if ($this->data['resumeFrom']) {
     echo('<a class="btn btn-primary" href="' . htmlspecialchars($this->data['resumeFrom']) . '">');
@@ -25,6 +25,6 @@ if ($this->data['resumeFrom']) {
     echo('</a>');
 }
 
-echo('<a class="btn btn-default" href="' . htmlspecialchars($this->data['logoutLink']) . '">' . $this->t('{consent:consent:abort}', array('SPNAME' => $dstName)) . '</a>');
+echo('<a class="btn btn-default" href="' . htmlspecialchars($this->data['logoutLink']) . '">' . $this->t('{consent:consent:abort}') . '</a>');
 
 $this->includeAtTemplateBase('includes/footer.php');
