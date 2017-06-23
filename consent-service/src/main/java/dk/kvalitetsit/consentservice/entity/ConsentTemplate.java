@@ -21,6 +21,9 @@ public class ConsentTemplate {
 	@Column(nullable = false, name = "mime_type")
 	private String mimeType;
 	
+	@Column(nullable = true, name = "friendly_name")
+	private String friendlyName;	
+	
 	@Lob
 	@Column(nullable = false)
 	private String content;
@@ -55,6 +58,14 @@ public class ConsentTemplate {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public String getFriendlyName() {
+		return friendlyName;
+	}
+
+	public void setFriendlyName(String friendlyName) {
+		this.friendlyName = friendlyName;
 	}
 
 }

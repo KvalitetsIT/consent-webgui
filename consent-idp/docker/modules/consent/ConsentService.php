@@ -84,7 +84,8 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
        	
        	if ($status == 'UNANSWERED') {
        		$state['consent:template.content'] =  $result->{'templateContent'};
-       		$state['consent:template.mimetype'] = $result->{'templateMimeType'};       	
+       		$state['consent:template.mimetype'] = $result->{'templateMimeType'}; 
+       		$state['consent:friendlyName'] = $result->{'friendlyName'};       	
        	}   	
        	
         return ($status == 'ACCEPTED'); 	    

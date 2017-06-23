@@ -36,6 +36,7 @@ public class ConsentService {
 			rv.setStatus(Status.UNANSWERED);
 			rv.setTemplateContent(template.getContent());
 			rv.setTemplateMimeType(template.getMimeType());
+			rv.setFriendlyName(template.getFriendlyName());
 		} else {
 			if (consent.isAnswer()) {
 				rv.setStatus(Status.ACCEPTED);

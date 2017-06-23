@@ -37,20 +37,9 @@ if (is_array($srcName)) {
     $srcName = $this->t($srcName);
 }
 
-if (array_key_exists('name', $this->data['dstMetadata'])) {
-    $dstName = $this->data['dstMetadata']['name'];
-} elseif (array_key_exists('OrganizationDisplayName', $this->data['dstMetadata'])) {
-    $dstName = $this->data['dstMetadata']['OrganizationDisplayName'];
-} else {
-    $dstName = $this->data['dstMetadata']['entityid'];
-}
-
-if (is_array($dstName)) {
-    $dstName = $this->t($dstName);
-}
-
 $srcName = htmlspecialchars($srcName);
-$dstName = htmlspecialchars($dstName);
+
+$dstName = $this->data['dstName'];
 
 $attributes = $this->data['attributes'];
 

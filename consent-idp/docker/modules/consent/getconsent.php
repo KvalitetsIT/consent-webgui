@@ -97,6 +97,7 @@ $t->data['noTarget'] = SimpleSAML_Module::getModuleURL('consent/noconsent.php');
 $t->data['noData'] = array('StateId' => $id);
 $t->data['attributes'] = $attributes;
 $t->data['checked'] = $state['consent:checked'];
+$t->data['dstName'] = $state['consent:friendlyName'];
 
 // Fetch privacypolicy
 if (array_key_exists('privacypolicy', $state['Destination'])) {

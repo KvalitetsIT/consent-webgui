@@ -7,6 +7,8 @@ public class ConsentStatus {
 	public String templateContent;
 	
 	public String templateMimeType;
+	
+	public String friendlyName;
 
 	public Status status;
 
@@ -32,6 +34,14 @@ public class ConsentStatus {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+	
+	public String getFriendlyName() {
+		return friendlyName;
+	}
+
+	public void setFriendlyName(String friendlyName) {
+		this.friendlyName = friendlyName;
 	}
 
 }
