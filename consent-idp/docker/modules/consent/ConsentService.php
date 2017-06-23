@@ -3,6 +3,7 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
 {
     private $_consentserviceurl;
     private $_useridattr;
+    private $_correlationidheadername;
 
     public function __construct($config)
     {
@@ -19,6 +20,10 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
 
         $this->_consentserviceurl = $config['consentserviceurl'];
         $this->_useridattr = $config['useridattr'];
+        
+        $config = SimpleSAML_Configuration::getInstance();
+    	
+    	$this->correlationidheadername = $config->getString('correlationidheadername', 'correlation-id');
     }
 
     /**
@@ -65,13 +70,18 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
         	$citizenId = array_values($citizenIdArray)[0];	
         } 
         
-       //TODO check spid og citizenid throw new Exception('consent:Database - \'table\' is supposed to be a string.');
-        
+         
         $qry_str = '?userId='.$citizenId.'&appId='.$spId;
         $serviceurl = $this->_consentserviceurl.$qry_str;
         
+        $headers = getallheaders();    	
+    	$corrId = $headers[$this->correlationidheadername];
+        
         $curl = curl_init($serviceurl); 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array($this->correlationidheadername.': '.$corrId));                                                                                                                   
+        
+        
        	$curl_response = curl_exec($curl);
 
        	$httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
@@ -135,13 +145,18 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
 		$jsonConsent = json_encode($this->utf8ize($updateConsent));
         
         $serviceurl = $this->_consentserviceurl;
+        
+        $headers = getallheaders();    	
+    	$corrId = $headers[$this->correlationidheadername];
+  
         $curl = curl_init($serviceurl); 
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
 	    curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonConsent);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(                                                                          
     		'Content-Type: application/json',  
-    		'Content-Length: ' . strlen($jsonConsent)                                                                              
+    		'Content-Length: ' . strlen($jsonConsent),
+    		$this->correlationidheadername.': '.$corrId                                                                             
 		));
        	$curl_response = curl_exec($curl);
 

@@ -122,9 +122,11 @@ $config = array(
      *
      */
      
-    'logging.level' => SimpleSAML_Logger::DEBUG,
+    'logging.level' => SimpleSAML_Logger::__LOG_LEVEL__,
     'logging.handler' => 'stdout',
 	'logging.format' => '{"@timestamp":"%time","service":"consentidp","logger":"LoggingHandlerSystemOut","level":"%level","correlation-id":"%correlationid","thread":"%trackid","message":"%msg"}',
+    'correlationidheadername' => '__CORRELATION_ID__',
+
 
 
     /* (New) statistics output configuration.

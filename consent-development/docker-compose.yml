@@ -48,6 +48,8 @@ services:
       - CONSENT_SERVICE_URL=http://consentservice/api/consent
       - USER_ID_ATTR=urn:dk:gov:saml:cprNumberIdentification
       - IDP_THEME=kitmodule:kittheme
+      - LOG_LEVEL=INFO
+      - CORRELATION_ID=correlation-id
      ports:
       - "8092:80"
    consentservice:

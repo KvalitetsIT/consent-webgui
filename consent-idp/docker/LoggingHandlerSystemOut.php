@@ -6,6 +6,8 @@ class SimpleSAML_Logger_LoggingHandlerSystemOut implements SimpleSAML_Logger_Log
     
     private $format;
     
+    private $correlationidheadername;
+    
     private static $levelNames = array(
         SimpleSAML_Logger::EMERG   => 'ERROR',
         SimpleSAML_Logger::ALERT   => 'ERROR',
@@ -24,6 +26,11 @@ class SimpleSAML_Logger_LoggingHandlerSystemOut implements SimpleSAML_Logger_Log
     public function __construct()
     {
     	$this->stdout = fopen('php://stdout', 'w');
+    	
+    	$config = SimpleSAML_Configuration::getInstance();
+    	
+    	$this->correlationidheadername = $config->getString('correlationidheadername', 'correlation-id');
+    	
     }
 
     /**
@@ -48,7 +55,7 @@ class SimpleSAML_Logger_LoggingHandlerSystemOut implements SimpleSAML_Logger_Log
     	$levelName = self::$levelNames[$level];
     	$headers = getallheaders();
     	
-    	$corrId = $headers['correlation-id'];
+    	$corrId = $headers[$this->correlationidheadername];
     	
     	$timeformat = '%Y-%m-%dT%H:%M:%S.000+00:00';
     	
