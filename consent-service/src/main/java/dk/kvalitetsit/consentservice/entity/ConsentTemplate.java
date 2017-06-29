@@ -24,6 +24,9 @@ public class ConsentTemplate {
 	@Column(nullable = true, name = "friendly_name")
 	private String friendlyName;	
 	
+	@Column(nullable = true, name = "notification_subject")
+	private String notificationSubject;		
+	
 	@Lob
 	@Column(nullable = false)
 	private String content;
@@ -66,6 +69,14 @@ public class ConsentTemplate {
 
 	public void setFriendlyName(String friendlyName) {
 		this.friendlyName = friendlyName;
+	}
+
+	public String getNotificationSubject() {
+		return notificationSubject;
+	}
+
+	public void setMailSubject(String notificationSubject) {
+		this.notificationSubject = notificationSubject;
 	}
 
 }

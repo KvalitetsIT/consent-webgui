@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dk.kvalitetsit.consentservice.dto.ConsentNotification.Function;
 import dk.kvalitetsit.consentservice.dto.ConsentStatus;
 import dk.kvalitetsit.consentservice.dto.ConsentStatus.Status;
 import dk.kvalitetsit.consentservice.entity.Consent;
@@ -67,7 +68,7 @@ public class ConsentService {
 		}
 		
 		if (consent) {
-			notificationService.sendNotification(userId, appId, template.getMimeType(), template.getContent() );
+			notificationService.sendNotification(userId, template.getNotificationSubject(), template.getMimeType(), template.getContent(), Function.AFGIVELSE);
 		}
 	}
 	
