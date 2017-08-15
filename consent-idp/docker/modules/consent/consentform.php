@@ -55,10 +55,7 @@ $this->includeAtTemplateBase('includes/header.php');
 
 <p>
 <?php
-echo $this->t(
-    '{consent:consent:consent_accept}',
-    array( 'SPNAME' => $dstName )
-);
+echo $this->t( $this->data['acceptText'], array( 'SPNAME' => $dstName ) );
 
 if (array_key_exists('descr_purpose', $this->data['dstMetadata'])) {
     echo '</p><p>' . $this->t(

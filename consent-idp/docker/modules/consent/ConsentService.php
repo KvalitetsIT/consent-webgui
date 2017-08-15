@@ -92,10 +92,16 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
        	$status = $result->{'status'};
        	
        	
-       	if ($status == 'UNANSWERED') {
+       	if ($status == 'UNANSWERED' || $status == 'DEPRECATED') {
        		$state['consent:template.content'] =  $result->{'templateContent'};
        		$state['consent:template.mimetype'] = $result->{'templateMimeType'}; 
-       		$state['consent:friendlyName'] = $result->{'friendlyName'};       	
+       		$state['consent:friendlyName'] = $result->{'friendlyName'};  
+       		
+       		if ($status == 'UNANSWERED') {
+       			$state['consent:acceptText'] = '{consent:consent:consent_accept}';
+       		} else {
+       			$state['consent:acceptText'] = '{consent:consent:consent_accept_deprecated}';
+       		}     	
        	}   	
        	
         return ($status == 'ACCEPTED'); 	    
