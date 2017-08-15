@@ -31,6 +31,12 @@ public class ConsentTemplate {
 	@Column(nullable = false)
 	private String content;
 
+	@Column
+	private int version;	
+	
+	@Column
+	private boolean active;	
+	
 	public Long getId() {
 		return id;
 	}
@@ -75,8 +81,24 @@ public class ConsentTemplate {
 		return notificationSubject;
 	}
 
-	public void setMailSubject(String notificationSubject) {
+	public void setNotificationSubject(String notificationSubject) {
 		this.notificationSubject = notificationSubject;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 }

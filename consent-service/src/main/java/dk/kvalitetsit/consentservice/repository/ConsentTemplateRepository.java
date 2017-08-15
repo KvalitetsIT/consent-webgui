@@ -1,5 +1,7 @@
 package dk.kvalitetsit.consentservice.repository;
 
+import java.util.List;
+
 import org.springframework.data.repository.Repository;
 
 import dk.kvalitetsit.consentservice.entity.ConsentTemplate;
@@ -8,7 +10,7 @@ public interface ConsentTemplateRepository extends Repository<ConsentTemplate,Lo
 	
 	ConsentTemplate save(ConsentTemplate entity);
 	
-	ConsentTemplate findByAppId(String appId);
+	List<ConsentTemplate> findByAppIdAndActive(String appId, boolean active);
     
 
 }

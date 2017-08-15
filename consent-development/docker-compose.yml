@@ -60,6 +60,8 @@ services:
       - DB_USERNAME=consent
       - DB_URL=jdbc:mysql://mysqldb:3306/consent
       - NOTIFICATION_SERVICE_URL=http://jsontomqservice:8090/notificationservice
+     ports:
+      - "8097:80"
    mongo:
      image: mongo:3.3
    app-a-saml-sp:

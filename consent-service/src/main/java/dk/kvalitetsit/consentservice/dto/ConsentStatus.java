@@ -2,7 +2,7 @@ package dk.kvalitetsit.consentservice.dto;
 
 public class ConsentStatus {
 
-	public enum Status { ACCEPTED, NOT_ACCEPTED, UNANSWERED };
+	public enum Status { ACCEPTED, NOT_ACCEPTED, UNANSWERED, DEPRECATED };
 	
 	public String templateContent;
 	
