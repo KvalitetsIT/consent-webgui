@@ -12,7 +12,7 @@
 		"en": "Remember"
 	},
 	"consent_accept": {
-		"en": "\"SPNAME\" kræver din samtykke for at tilgå applikationen. Du skal læse og acceptere samtykkeerklæringen før du kan fortsætte."
+		"en": "\"SPNAME\" kræver dit samtykke for at tilgå applikationen. Du skal læse og acceptere samtykkeerklæringen før du kan fortsætte."
 	},
 	"consent_accept_deprecated": {
 		"en": "Der er kommet en ny samtykkeerklæring for applikationen \"SPNAME\", som du skal læse og acceptere før du kan fortsætte."
