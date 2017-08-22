@@ -183,9 +183,16 @@ public class ConsentService {
 		return dtos;
 	}
 
-	public void revokeConsent(String userId, long consentId) {
+	public void revokeConsent(String userId, long consentId) throws ConsentServiceException {
 		Consent c = consentRepository.findOne(consentId);
+		if (c == null) {
+			throw new ConsentServiceException("Consent does not exist");
+		}
+		if (!c.getCitizenId().equals(userId)) {
+			throw new ConsentServiceException("Consent does not belong to current user");
+		}
 		c.setRevocationDate(new Date());
+		notificationService.sendNotification(userId, c.getConsentTemplate().getNotificationSubject(), c.getConsentTemplate().getMimeType(), c.getConsentTemplate().getContent(), Function.ANNULERING);
 		consentRepository.save(c);
 	}
 

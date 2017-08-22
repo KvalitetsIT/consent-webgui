@@ -13,7 +13,7 @@ public class ConsentNotification {
 	private Function function;
 
 	public enum Function {
-		AFGIVELSE, ANNULERING
+		AFGIVELSE, TILBAGETRAEKNING
 	}
 	
 	public String getCitizenId() {
