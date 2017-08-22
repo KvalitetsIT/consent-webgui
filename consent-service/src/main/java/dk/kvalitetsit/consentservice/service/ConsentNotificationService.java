@@ -4,17 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import dk.kvalitetsit.consentservice.dto.ConsentNotification;
 import dk.kvalitetsit.consentservice.dto.ConsentNotification.Function;
+import dk.kvalitetsit.consentservice.util.SessionAddingService;
 
-public class ConsentNotificationService extends RestTemplate {
+public class ConsentNotificationService extends SessionAddingService {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(ConsentNotificationService.class);
 	
 	private String url;
-
 	
 	public ConsentNotificationService(String url) {
 		this.url = url;

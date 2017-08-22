@@ -116,5 +116,8 @@
 	<modules>
 		<module>consent-idp</module>
 		<module>consent-service</module>
+		<module>consent-interface</module>
+		<module>consent-webgui</module>
+		<module>consent-admingui</module>
 	</modules>
 </project>

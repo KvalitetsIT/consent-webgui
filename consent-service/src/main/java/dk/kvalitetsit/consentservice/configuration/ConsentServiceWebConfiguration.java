@@ -10,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import dk.kvalitetsit.consentservice.service.ConsentNotificationService;
+import dk.kvalitetsit.consentservice.service.UserService;
 import dk.kvalitetsit.consentservice.util.LoggingInterceptor;
 
 @Configuration
@@ -20,6 +21,9 @@ public class ConsentServiceWebConfiguration extends WebMvcConfigurerAdapter {
 
 	@Value("${notificationservice.url}")
 	private String notificationServiceUrl;
+	
+	@Value("${userservice.url}")
+	private String userServiceUrl;
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
@@ -37,6 +41,12 @@ public class ConsentServiceWebConfiguration extends WebMvcConfigurerAdapter {
 	public ConsentNotificationService consentNotificationService() {
 		ConsentNotificationService consentNotificationService = new ConsentNotificationService(notificationServiceUrl); 
 		return consentNotificationService;
+	}
+	
+	@Bean
+	public UserService userService() {
+		UserService userService = new UserService(userServiceUrl); 
+		return userService;
 	}
 	
 }

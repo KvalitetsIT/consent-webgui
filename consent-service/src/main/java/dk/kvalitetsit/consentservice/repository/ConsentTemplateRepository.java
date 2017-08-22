@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.repository.Repository;
 
+import dk.kvalitetsit.consentservice.entity.Consent;
 import dk.kvalitetsit.consentservice.entity.ConsentTemplate;
 
 public interface ConsentTemplateRepository extends Repository<ConsentTemplate,Long> {
@@ -11,6 +12,6 @@ public interface ConsentTemplateRepository extends Repository<ConsentTemplate,Lo
 	ConsentTemplate save(ConsentTemplate entity);
 	
 	List<ConsentTemplate> findByAppIdAndActive(String appId, boolean active);
-    
-
+	
+	ConsentTemplate findOne(Long id);
 }

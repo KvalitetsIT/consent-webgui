@@ -1,5 +1,7 @@
 package dk.kvalitetsit.consentservice.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,6 +22,12 @@ public class Consent {
 	
 	@Column
 	private boolean answer;
+	
+	@Column(nullable = false, name= "creation_date")
+	private Date creationDate;
+	
+	@Column(nullable = true, name= "revocation_date")
+	private Date revocationDate;	
 	
 	@ManyToOne
 	private ConsentTemplate consentTemplate;
@@ -54,6 +62,22 @@ public class Consent {
 
 	public void setConsentTemplate(ConsentTemplate consentTemplate) {
 		this.consentTemplate = consentTemplate;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Date getRevocationDate() {
+		return revocationDate;
+	}
+
+	public void setRevocationDate(Date revocationDate) {
+		this.revocationDate = revocationDate;
 	}
 	
 

@@ -1,5 +1,7 @@
 package dk.kvalitetsit.consentservice.service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dk.kvalitetsit.consentservice.dto.AddConsentTemplateRequest;
+import dk.kvalitetsit.consentservice.dto.ConsentDTO;
+import dk.kvalitetsit.consentservice.dto.ConsentDTOs;
 import dk.kvalitetsit.consentservice.dto.ConsentNotification.Function;
 import dk.kvalitetsit.consentservice.dto.ConsentStatus;
 import dk.kvalitetsit.consentservice.dto.ConsentStatus.Status;
+import dk.kvalitetsit.consentservice.dto.ConsentTemplateDTO;
 import dk.kvalitetsit.consentservice.dto.UpdateConsentTemplateRequest;
 import dk.kvalitetsit.consentservice.entity.Consent;
 import dk.kvalitetsit.consentservice.entity.ConsentTemplate;
@@ -158,5 +163,36 @@ public class ConsentService {
 	
 	private boolean isBlank(String s) {
 		return (s==null || s.trim().length() == 0);
+	}
+
+	public ConsentDTOs getAllConsents(String citizenId) {
+		List<Consent> cs = consentRepository.findByCitizenId(citizenId);
+		List<ConsentDTO> rv = new ArrayList<>();
+		for (Consent c : cs) {
+			ConsentDTO cdto = new ConsentDTO();
+			cdto.setAppName(c.getConsentTemplate().getFriendlyName());
+			cdto.setCreationDate(c.getCreationDate());
+			cdto.setRevocationDate(c.getRevocationDate());
+			cdto.setId(c.getId());
+			cdto.setTemplateId(c.getConsentTemplate().getId());
+			rv.add(cdto);
+		}
+		ConsentDTOs dtos = new ConsentDTOs();
+		dtos.setList(rv);
+		return dtos;
+	}
+
+	public void revokeConsent(String userId, long consentId) {
+		Consent c = consentRepository.findOne(consentId);
+		c.setRevocationDate(new Date());
+		consentRepository.save(c);
+	}
+
+	public ConsentTemplateDTO getConsentTemplate(long consentTemplateId) {
+		ConsentTemplate ct = consentTemplateRepository.findOne(consentTemplateId);
+		ConsentTemplateDTO rv = new ConsentTemplateDTO();
+		rv.setMimeType(ct.getMimeType());
+		rv.setContent(ct.getContent());
+		return rv;
 	}
 }
