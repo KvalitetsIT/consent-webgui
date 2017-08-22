@@ -176,6 +176,7 @@ public class ConsentService {
 			cdto.setRevocationDate(c.getRevocationDate());
 			cdto.setId(c.getId());
 			cdto.setTemplateId(c.getConsentTemplate().getId());
+			cdto.setTemplateActive(c.getConsentTemplate().isActive());
 			rv.add(cdto);
 		}
 		ConsentDTOs dtos = new ConsentDTOs();
@@ -192,7 +193,7 @@ public class ConsentService {
 			throw new ConsentServiceException("Consent does not belong to current user");
 		}
 		c.setRevocationDate(new Date());
-		notificationService.sendNotification(userId, c.getConsentTemplate().getNotificationSubject(), c.getConsentTemplate().getMimeType(), c.getConsentTemplate().getContent(), Function.ANNULERING);
+		notificationService.sendNotification(userId, c.getConsentTemplate().getNotificationSubject(), c.getConsentTemplate().getMimeType(), c.getConsentTemplate().getContent(), Function.TILBAGETRAEKNING);
 		consentRepository.save(c);
 	}
 

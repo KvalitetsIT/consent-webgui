@@ -17,6 +17,8 @@ public class ConsentDTO {
 	
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	public Date revocationDate;
+	
+	public boolean templateActive;
 
 	public long getId() {
 		return id;
@@ -56,6 +58,14 @@ public class ConsentDTO {
 
 	public void setRevocationDate(Date revocationDate) {
 		this.revocationDate = revocationDate;
+	}
+
+	public boolean isTemplateActive() {
+		return templateActive;
+	}
+
+	public void setTemplateActive(boolean templateActive) {
+		this.templateActive = templateActive;
 	}
 
 }
