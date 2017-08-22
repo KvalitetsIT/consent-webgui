@@ -16,13 +16,22 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th>Navn</th>
+			<th>Applikation</th>
 			<th>Oprettet</th>
-			<th>Sidst anvendt</th>
 			<th></th>
 		</tr>
 	</thead>
 	<tbody>
+	<c:forEach items="${consents}" var="consent">
+		<tr>
+        	<td><c:out value="${consent.appName}"/></td>
+        	<td><fmt:formatDate value="${consent.creationDate}"   pattern="dd/MM/yyyy HH:mm"/></td>
+        	<td>
+        		<a class="btn btn-default" target='_blank' href=showConsentTemplate?templateId=<c:out value="${consent.templateId}"/>>Vis Samtykkeerklæring</a>
+        		<a class="btn btn-default" href=revokeConsent?consentId=<c:out value="${consent.id}"/>>Træk Samtykke Tilbage</a>
+        	</td>
+      	</tr>
+	</c:forEach>
 	</tbody>	
 </table>
 
