@@ -35,15 +35,20 @@ public class ViewController {
     
 	
     @RequestMapping("/showConsents")
-    public String showConsents(Model model) {    
+    public String showConsents(Model model) {
+    	
+    	List<ConsentDTO> toShow = new ArrayList<>();    	
     	ConsentDTOs consentDTOs = consentService.getAllConsents();
-    	if (consentDTOs != null && consentDTOs.list.size() > 0) {
-    		List<ConsentDTO> toShow = new ArrayList<>();
+    	
+    	if (consentDTOs != null && consentDTOs.list.size() > 0) {    		
     		for (ConsentDTO c : consentDTOs.getList()) {
     			if (c.getRevocationDate() == null) {
     				toShow.add(c);
     			}
-    		}    		
+    		} 
+    	}
+    	
+    	if (toShow.size() > 0) {
     		model.addAttribute("consents", toShow); 
     		return "consentList";  
     	} else {
