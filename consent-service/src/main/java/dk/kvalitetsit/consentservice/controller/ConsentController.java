@@ -1,7 +1,5 @@
 package dk.kvalitetsit.consentservice.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dk.kvalitetsit.consentservice.dto.AddConsentTemplateRequest;
-import dk.kvalitetsit.consentservice.dto.ConsentDTO;
 import dk.kvalitetsit.consentservice.dto.ConsentDTOs;
 import dk.kvalitetsit.consentservice.dto.ConsentStatus;
 import dk.kvalitetsit.consentservice.dto.ConsentTemplateDTO;

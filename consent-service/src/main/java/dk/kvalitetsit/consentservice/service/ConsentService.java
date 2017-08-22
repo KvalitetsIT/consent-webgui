@@ -83,6 +83,7 @@ public class ConsentService {
 			newConsent.setAnswer(consent);
 			newConsent.setConsentTemplate(template);
 			newConsent.setCitizenId(userId);
+			newConsent.setCreationDate(new Date());
 			consentRepository.save(newConsent);
 		}
 		
@@ -101,7 +102,7 @@ public class ConsentService {
 	}
 	
 	private Consent getConsentForTemplateAndUser(ConsentTemplate template, String userId) {
-		return consentRepository.findByConsentTemplateAndCitizenId(template, userId);
+		return consentRepository.findByConsentTemplateAndCitizenIdAndRevocationDate(template, userId,null);
 	}
 
 	public void addConsentTemplate(AddConsentTemplateRequest addConsentTemplateRequest) throws ConsentServiceException {
