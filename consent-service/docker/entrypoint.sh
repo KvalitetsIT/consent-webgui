@@ -34,7 +34,7 @@ if [[ -z $SERVICE_ID ]]; then
   echo "Default SERVICE_ID = consent-service"
   export SERVICE_ID=consent-service
 fi
-
+ 
 
 envsubst < /configtemplates/application.properties > /app/application.properties
 envsubst < /configtemplates/logback.xml > /app/logback-spring.xml
