@@ -167,6 +167,7 @@ public class ConsentService {
 	}
 
 	public ConsentDTOs getAllConsents(String citizenId) {
+		LOGGER.info("Attempting to fetch all consents for citizenId: " + citizenId);
 		List<Consent> cs = consentRepository.findByCitizenId(citizenId);
 		List<ConsentDTO> rv = new ArrayList<>();
 		for (Consent c : cs) {
