@@ -1,5 +1,7 @@
 package dk.kvalitetsit.consentservice.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -22,6 +24,8 @@ import dk.kvalitetsit.consentservice.service.UserService;
 
 @RestController
 public class ConsentController extends AbstractController {
+	
+	private static Logger LOGGER = LoggerFactory.getLogger(ConsentController.class);
 	
 	@Autowired
 	private ConsentService service;
@@ -55,7 +59,10 @@ public class ConsentController extends AbstractController {
 	
 	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/getAllConsents", method = RequestMethod.GET) 
-	public ConsentDTOs getAllConsents() throws ConsentServiceException {		
+	public ConsentDTOs getAllConsents() throws ConsentServiceException {	
+		LOGGER.info("Received getAllConsents call");
+		String uid = getUid();
+		LOGGER.info("uid is " + uid);
 		return service.getAllConsents(getUid());
 	}
 	

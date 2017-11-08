@@ -20,6 +20,7 @@ public class ConsentService extends SessionAddingService {
 	
 	public ConsentDTOs getAllConsents() {
 				
+		LOGGER.info("Calling on UTRL " + consentServiceContext+"/api/getAllConsents");
 		ResponseEntity<ConsentDTOs> response = getForEntity(consentServiceContext+"/api/getAllConsents", ConsentDTOs.class);		
 
 		if (response.getStatusCode().equals(HttpStatus.OK)) {
