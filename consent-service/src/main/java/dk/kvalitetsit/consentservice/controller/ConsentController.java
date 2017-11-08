@@ -78,6 +78,7 @@ public class ConsentController extends AbstractController {
 	
 	private String getUid() {
 		SessionData data = userService.getSessionData();		
+		LOGGER.info("Looking up in sessionData with key: " + uidKey);
 		String rv = data.getUserAttributes().get(uidKey).get(0);
 		return rv;
 	}		
