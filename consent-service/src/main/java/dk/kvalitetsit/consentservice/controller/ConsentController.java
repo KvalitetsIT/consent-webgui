@@ -1,5 +1,7 @@
 package dk.kvalitetsit.consentservice.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import dk.kvalitetsit.consentservice.dto.AddConsentTemplateRequest;
 import dk.kvalitetsit.consentservice.dto.ConsentDTOs;
 import dk.kvalitetsit.consentservice.dto.ConsentStatus;
 import dk.kvalitetsit.consentservice.dto.ConsentTemplateDTO;
+import dk.kvalitetsit.consentservice.dto.ConsentTemplateTOs;
 import dk.kvalitetsit.consentservice.dto.SessionData;
 import dk.kvalitetsit.consentservice.dto.UpdateConsent;
 import dk.kvalitetsit.consentservice.dto.UpdateConsentTemplateRequest;
@@ -56,6 +59,12 @@ public class ConsentController extends AbstractController {
 	public void updateConsentTemplate(@RequestBody UpdateConsentTemplateRequest updateConsentTemplateRequest) throws ConsentServiceException {
 		service.updateConsentTemplate(updateConsentTemplateRequest);
 	}
+	
+	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/getAllActiveConsentTemplates", method = RequestMethod.GET)
+	public ConsentTemplateTOs getAllActiveConsentTemplates() throws ConsentServiceException {
+		return service.getAllActiveConsentTemplates();
+	}
+	
 	
 	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/getAllConsents", method = RequestMethod.GET) 

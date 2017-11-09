@@ -20,7 +20,7 @@
 			<div class="navbar-brand">
 				<img style="margin-top:-10px;" src="images/logo.png" />
 			</div>
-			<div class="navbar-brand" >Samtykke Selvbetjening</div>
+			<div class="navbar-brand" >Samtykke Administration</div>
 		</div>
 	</div>
 </nav>

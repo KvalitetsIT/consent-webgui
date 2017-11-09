@@ -16,6 +16,8 @@ import dk.kvalitetsit.consentservice.dto.ConsentNotification.Function;
 import dk.kvalitetsit.consentservice.dto.ConsentStatus;
 import dk.kvalitetsit.consentservice.dto.ConsentStatus.Status;
 import dk.kvalitetsit.consentservice.dto.ConsentTemplateDTO;
+import dk.kvalitetsit.consentservice.dto.ConsentTemplateTO;
+import dk.kvalitetsit.consentservice.dto.ConsentTemplateTOs;
 import dk.kvalitetsit.consentservice.dto.UpdateConsentTemplateRequest;
 import dk.kvalitetsit.consentservice.entity.Consent;
 import dk.kvalitetsit.consentservice.entity.ConsentTemplate;
@@ -204,5 +206,25 @@ public class ConsentService {
 		rv.setMimeType(ct.getMimeType());
 		rv.setContent(ct.getContent());
 		return rv;
+	}
+
+	public ConsentTemplateTOs getAllActiveConsentTemplates() {
+		List<ConsentTemplate> allTemplates = consentTemplateRepository.findByActive(true);
+		List<ConsentTemplateTO> rvlist = new ArrayList<>();
+		for (ConsentTemplate t : allTemplates) {
+			ConsentTemplateTO ctto = new ConsentTemplateTO();
+			ctto.setAppId(t.getAppId());
+			ctto.setFriendlyName(t.getFriendlyName());
+			ctto.setVersion(t.getVersion());
+			ctto.setNotificationSubject(t.getNotificationSubject());
+			ctto.setId(t.getId());
+			rvlist.add(ctto);
+		}
+		
+		ConsentTemplateTOs rv = new ConsentTemplateTOs();
+		rv.setList(rvlist);
+		
+		return rv;
+		
 	}
 }
