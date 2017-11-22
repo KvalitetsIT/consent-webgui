@@ -42,7 +42,7 @@ public class ViewController {
     	
     	if (consentDTOs != null && consentDTOs.list.size() > 0) {    		
     		for (ConsentDTO c : consentDTOs.getList()) {
-    			if (c.getRevocationDate() == null) {
+    			if (c.getRevocationDate() == null && c.isTemplateActive()) {
     				toShow.add(c);
     			}
     		} 
