@@ -15,7 +15,7 @@
 		"en": "\"SPNAME\" kræver dit samtykke for at tilgå applikationen. Du skal læse og acceptere samtykkeerklæringen før du kan fortsætte. Knappen \"Læs samtykkeerklæring\" åbner et nyt vindue. Du skal lukke vinduet for at komme tilbage til denne side."
 	},
 	"consent_accept_deprecated": {
-		"en": "Der er kommet en ny samtykkeerklæring for applikationen \"SPNAME\", som du skal læse og acceptere før du kan fortsætte."
+		"en": "Der er kommet en ny samtykkeerklæring for applikationen \"SPNAME\", som du skal læse og acceptere før du kan fortsætte. Knappen \"Læs samtykkeerklæring\" åbner et nyt vindue. Du skal lukke vinduet for at komme tilbage til denne side."
 	},
 	"login": {
 		"en": "login"
