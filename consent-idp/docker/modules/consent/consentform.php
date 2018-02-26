@@ -107,6 +107,12 @@ foreach ($this->data['noData'] as $name => $value) {
 			$('#yesbutton').prop('disabled', false);
 		});
 		
+		if ($('#seeconsentbutton2')) {
+			$('#seeconsentbutton2').click(function () {
+				$('#yesbutton').prop('disabled', false);
+			});
+		}
+		
 	});
 	
 	
@@ -121,7 +127,7 @@ if ($dstName == 'Borger TestApp') {
 
 	$pdfurl = "../../getconsenttemplate.php?StateId=".$_REQUEST['StateId'];
 
-	echo "<a target='_blank' id='seeconsentbutton' class='btn btn-default' href='pdfjs/web/viewer.html?file=".urlencode($pdfurl)."'>Læs samtykkeerklæring (Alternativ PDF-visning)</a>";
+	echo "<a target='_blank' id='seeconsentbutton2' class='btn btn-default' href='pdfjs/web/viewer.html?file=".urlencode($pdfurl)."'>Læs samtykkeerklæring (Alternativ PDF-visning)</a>";
 	
 }
 
