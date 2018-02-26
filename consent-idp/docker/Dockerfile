@@ -29,6 +29,9 @@ ADD modules/consent/logout_completed.php /var/simplesamlphp/modules/consent/temp
 ADD modules/consent/consent.definition.json /var/simplesamlphp/modules/consent/dictionaries
 ADD modules/consent/jquery-1.11.3.min.js /var/simplesamlphp/modules/consent/www
 
+ADD modules/consent/pdfjs /var/simplesamlphp/modules/consent/www/pdfjs
+
+
 ADD Logger.php /var/simplesamlphp/lib/SimpleSAML/
 ADD LoggingHandlerSystemOut.php /var/simplesamlphp/lib/SimpleSAML/Logger/
 

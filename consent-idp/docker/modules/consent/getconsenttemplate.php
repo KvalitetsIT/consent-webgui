@@ -21,6 +21,8 @@ if (!is_null($sid['url'])) {
 $state = SimpleSAML_Auth_State::loadState($id, 'consent:request');
 
 header('Content-Type: '.$state['consent:template.mimetype']);
+header('Content-Disposition: inline; filename=samtykke.pdf');
+ 
 echo base64_decode($state['consent:template.content']);
 
 

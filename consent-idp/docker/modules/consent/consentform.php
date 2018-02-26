@@ -117,6 +117,15 @@ foreach ($this->data['noData'] as $name => $value) {
 
 echo "<a target='_blank' id='seeconsentbutton' class='btn btn-default' href='getconsenttemplate.php?StateId=".$_REQUEST['StateId']."'>".$this->t('{consent:consent:seeconsent}')."</a>";
 
+if ($dstName == 'Borger TestApp') {
+
+	$pdfurl = "../../getconsenttemplate.php?StateId=".$_REQUEST['StateId'];
+
+	echo "<a target='_blank' id='seeconsentbutton' class='btn btn-default' href='pdfjs/web/viewer.html?file=".urlencode($pdfurl)."'>Læs samtykkeerklæring (Alternativ PDF-visning)</a>";
+	
+}
+
+
 $this->includeAtTemplateBase('includes/footer.php');
 
 ?>
