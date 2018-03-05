@@ -1,5 +1,10 @@
 #! /bin/bash
 
+if [[ -z $SESSION_DURATION_IN_MINUTES ]]; then 
+  echo "using session duration of an hour"
+  export SESSION_DURATION_IN_MINUTES=60
+fi
+
 # Copy key and certificates
 cp /cert/${IDP_CERTIFICATE} /var/simplesamlphp/cert/certificate.crt
 cp /cert/${IDP_PRIVATE_KEY} /var/simplesamlphp/cert/certificate.pem
@@ -22,6 +27,7 @@ grep -rl logging.processname /var/simplesamlphp/config/config.php | xargs sed -i
 grep -rl logging.logfile /var/simplesamlphp/config/config.php | xargs sed -i "s/'logging.logfile' => 'simplesamlphp.log',/'logging.logfile' => 'simplesamlphp-idp.log',/g"
 grep -rl session.cookie.path /var/simplesamlphp/config/config.php | xargs sed -i "s/'session.cookie.path' => '\/',/'session.cookie.path' => '\/${IDP_CONTEXTPATH}\/',/g"
 grep -rl auth /var/simplesamlphp/metadata/saml20-idp-hosted.php | xargs sed -i "s/example-userpass/default-sp/g"
+grep -rl session.duration /var/simplesamlphp/config/config.php | xargs sed -i "s/8 \* (60 \* 60),/${SESSION_DURATION_IN_MINUTES} \* 60,/g"
 
 if [[ -z $IDP_THEME ]]; then 
   echo "using default theme"
