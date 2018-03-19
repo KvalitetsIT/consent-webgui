@@ -35,5 +35,6 @@ ADD modules/consent/pdfjs /var/simplesamlphp/modules/consent/www/pdfjs
 ADD Logger.php /var/simplesamlphp/lib/SimpleSAML/
 ADD LoggingHandlerSystemOut.php /var/simplesamlphp/lib/SimpleSAML/Logger/
 
+ADD vendor/simplesamlphp/saml2/src/SAML2/AuthnRequest.php /var/simplesamlphp/vendor/simplesamlphp/saml2/src/SAML2/AuthnRequest.php
 
 ENTRYPOINT ["/entrypoint.sh"]
