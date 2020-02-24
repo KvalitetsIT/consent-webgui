@@ -3,6 +3,7 @@ Denne IdP kan sættes mellem service providers (SPs) og en identity provider (Id
 
 Løsningen kan prøves af ved at køre
 ```
+mvn clean install (i roden)
 ./consent-developent/docker-compose up
 ```
 
