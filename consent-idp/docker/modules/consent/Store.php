@@ -21,8 +21,10 @@ abstract class sspmod_consent_Store
         assert('is_array($config)');
     }
 
-    public function hasConsentMore($userId, $destinationId, $attributeSet, &$state) {
-		hasConsent($userId, $destinationId, $attributeSet);
+   abstract public function getMunicipality($userId,$attributeSet, $state);
+
+    public function hasConsentMore($userId, $municipality, $destinationId, $attributeSet, &$state) {
+		hasConsent($userId, $municipality, $destinationId, $attributeSet);
 	}
 
     /**
@@ -38,11 +40,11 @@ abstract class sspmod_consent_Store
      * @return bool True if the user has given consent earlier, false if not
      *              (or on error).
      */
-    abstract public function hasConsent($userId, $destinationId, $attributeSet);
+    abstract public function hasConsent($userId, $municipality, $destinationId, $attributeSet);
 
 
     public function saveConsentMore($userId, $destinationId, $attributeSet, $state) {
-		saveConsent($userId, $destinationId, $attributeSet);
+		saveConsent($userId, $municipality, $destinationId, $attributeSet);
 	}
 
     /**
@@ -57,7 +59,7 @@ abstract class sspmod_consent_Store
      *
      * @return bool True if consent is succesfully saved otherwise false 
      */
-    abstract public function saveConsent($userId, $destinationId, $attributeSet);
+    abstract public function saveConsent($userId, $municipality, $destinationId, $attributeSet);
 
     /**
      * Delete consent.
@@ -69,7 +71,7 @@ abstract class sspmod_consent_Store
      *
      * @return mixed Should be the number of consent deleted 
      */
-    abstract public function deleteConsent($userId, $destinationId);
+    abstract public function deleteConsent($userId, $municipality, $destinationId);
 
     /**
      * Delete all consents.

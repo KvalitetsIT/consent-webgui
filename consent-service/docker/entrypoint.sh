@@ -38,5 +38,4 @@ fi
 
 envsubst < /configtemplates/application.properties > /app/application.properties
 envsubst < /configtemplates/logback.xml > /app/logback-spring.xml
-
-java $JVM_OPTS -jar consent-service.jar
+java $JVM_OPTS -jar /app/consent-service.jar

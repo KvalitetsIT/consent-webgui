@@ -229,14 +229,14 @@ class sspmod_consent_Auth_Process_Consent extends SimpleSAML_Auth_ProcessingFilt
             $userId       = self::getHashedUserID($state['UserID'], $source);
             $targetedId   = self::getTargetedID($state['UserID'], $source, $destination);
             $attributeSet = self::getAttributeHash($attributes, $this->_includeValues);
-
+            $municipality = $this->_store-> getMunicipality($userId,$attributeSet, $state);
             SimpleSAML_Logger::debug(
                 'Consent: hasConsent() [' . $userId . '|' . $targetedId . '|' .
                 $attributeSet . ']'
             );
 
             try {
-                if ($this->_store->hasConsentMore($userId, $targetedId, $attributeSet, $state)) {
+                if ($this->_store->hasConsentMore($userId, $municipality, $targetedId, $attributeSet, $state)) {
                     // Consent already given
                     SimpleSAML_Logger::stats('Consent: Consent found');
                     SimpleSAML_Stats::log('consent:found', $statsData);
@@ -248,6 +248,7 @@ class sspmod_consent_Auth_Process_Consent extends SimpleSAML_Auth_ProcessingFilt
 
                 $state['consent:store']              = $this->_store;
                 $state['consent:store.userId']       = $userId;
+                $state['consent:store.municipality'] = $municipality;
                 $state['consent:store.destination']  = $targetedId;
                 $state['consent:store.attributeSet'] = $attributeSet;
             } catch (Exception $e) {

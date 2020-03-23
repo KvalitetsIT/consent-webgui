@@ -464,6 +464,7 @@ $config = array(
             'store' => array(
                 'consent:ConsentService',
                 'consentserviceurl' => '__CONSENT_SERVICE_URL__',
+                'spserviceurl' => '__SP_SERVICE_URL__',
                 'useridattr' => '__USER_ID_ATTR__',
             ),
         ),

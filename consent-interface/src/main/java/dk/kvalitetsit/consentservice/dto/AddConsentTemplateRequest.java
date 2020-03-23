@@ -5,12 +5,14 @@ public class AddConsentTemplateRequest {
 	public String appId;
 	
 	public String content;
-	
+
 	public String mimeType;
 	
 	public String friendlyName;
 	
 	public String notificationSubject;
+
+	public String municipalityId;
 
 	public String getAppId() {
 		return appId;
@@ -52,4 +54,11 @@ public class AddConsentTemplateRequest {
 		this.notificationSubject = notificationSubject;
 	}
 
+    public String getMunicipalityId() {
+        return municipalityId;
+    }
+
+    public void setMunicipalityId(String municipalityId) {
+        this.municipalityId = municipalityId;
+    }
 }

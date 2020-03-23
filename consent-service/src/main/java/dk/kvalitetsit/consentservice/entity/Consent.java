@@ -2,20 +2,15 @@ package dk.kvalitetsit.consentservice.entity;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity(name="Consent")
 @Table(name="consent")
 public class Consent {
 	
 	@Id
-	@GeneratedValue
-	private Long id;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 	
 	@Column(nullable = false, name= "citizen_id")
 	private String citizenId;
@@ -31,6 +26,9 @@ public class Consent {
 	
 	@ManyToOne
 	private ConsentTemplate consentTemplate;
+
+    @ManyToOne
+    private Municipality municipality;
 
 	public Long getId() {
 		return id;
@@ -79,6 +77,12 @@ public class Consent {
 	public void setRevocationDate(Date revocationDate) {
 		this.revocationDate = revocationDate;
 	}
-	
 
+    public Municipality getMunicipality() {
+        return municipality;
+    }
+
+    public void setMunicipality(Municipality municipality) {
+        this.municipality = municipality;
+    }
 }

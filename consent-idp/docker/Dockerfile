@@ -1,6 +1,6 @@
 FROM ianblenke/simplesamlphp:1.13.2
 
-RUN  apt-get update && apt-get install gettext -y
+#RUN  sudo apt-get update && sudo apt-get install -y gettext 
 
 ADD entrypoint.sh /
 RUN chmod +x /entrypoint.sh

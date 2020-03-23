@@ -1,18 +1,13 @@
 package dk.kvalitetsit.consentservice.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity(name="ConsentTemplate")
 @Table(name="consent_template")
 public class ConsentTemplate {	
 	
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(nullable = false, name = "app_id")
@@ -35,9 +30,12 @@ public class ConsentTemplate {
 	private int version;	
 	
 	@Column
-	private boolean active;	
-	
-	public Long getId() {
+	private boolean active;
+
+    @ManyToOne
+    private Municipality municipality;
+
+    public Long getId() {
 		return id;
 	}
 
@@ -101,4 +99,11 @@ public class ConsentTemplate {
 		this.active = active;
 	}
 
+    public Municipality getMunicipality() {
+        return municipality;
+    }
+
+    public void setMunicipality(Municipality municipality) {
+        this.municipality = municipality;
+    }
 }

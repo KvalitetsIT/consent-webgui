@@ -5,6 +5,8 @@ public class UpdateConsent {
 	public String userId;
 	
 	public String appId;
+
+	public Integer municipalityId;
 	
 	public boolean consent;
 
@@ -32,4 +34,12 @@ public class UpdateConsent {
 	public void setConsent(boolean consent) {
 		this.consent = consent;
 	}
+
+    public Integer getMunicipalityId() {
+        return municipalityId;
+    }
+
+    public void setMunicipalityId(Integer municipalityId) {
+        this.municipalityId = municipalityId;
+    }
 }

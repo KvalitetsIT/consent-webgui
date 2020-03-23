@@ -55,8 +55,9 @@ $this->includeAtTemplateBase('includes/header.php');
 
 <p>
 <?php
+SimpleSAML_Logger::info('***********');
 echo $this->t( $this->data['acceptText'], array( 'SPNAME' => $dstName ) );
-
+SimpleSAML_Logger::info('xxxxxxxxxx');
 if (array_key_exists('descr_purpose', $this->data['dstMetadata'])) {
     echo '</p><p>' . $this->t(
         '{consent:consent:consent_purpose}', 

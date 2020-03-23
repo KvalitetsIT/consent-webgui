@@ -53,15 +53,17 @@ if (array_key_exists('yes', $_REQUEST)) {
 
         $store = $state['consent:store'];
         $userId = $state['consent:store.userId'];
+        $municipality = $state['consent:store.municipality'];
         $targetedId = $state['consent:store.destination'];
         $attributeSet = $state['consent:store.attributeSet'];
 
         SimpleSAML_Logger::debug(
             'Consent - saveConsent() : [' . $userId . '|' .
+            $municipality . '|' .
             $targetedId . '|' .  $attributeSet . ']'
         );	
         try {
-            $store->saveConsentMore($userId, $targetedId, $attributeSet, $state);
+            $store->saveConsentMore($userId, $municipality, $targetedId, $attributeSet, $state);
         } catch (Exception $e) {
             SimpleSAML_Logger::error('Consent: Error writing to storage: ' . $e->getMessage());
         }

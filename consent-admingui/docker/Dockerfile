@@ -1,4 +1,4 @@
-FROM openjdk:8u212-jre-alpine
+FROM adoptopenjdk/openjdk13-openj9:x86_64-alpine-jre-13.0.2_8_openj9-0.18.0
 RUN apk update && \
     apk upgrade && \
     apk add --update gettext tzdata

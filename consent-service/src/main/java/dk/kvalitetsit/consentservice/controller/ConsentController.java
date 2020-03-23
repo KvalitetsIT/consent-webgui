@@ -1,7 +1,5 @@
 package dk.kvalitetsit.consentservice.controller;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,15 +36,15 @@ public class ConsentController extends AbstractController {
 	
 	@Value("${uid.key}")
 	private String uidKey;
-	
-	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/consent", method = RequestMethod.GET) 
-	public ConsentStatus getConsentStatus(@RequestParam("userId") String userId, @RequestParam("appId") String appId) throws ConsentServiceException {		
-		return service.getConsentStatus(userId, appId);
+
+	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/consent", method = RequestMethod.GET)
+	public ConsentStatus getConsentStatus(@RequestParam("userId") String userId,@RequestParam("municipalityId") Integer municipalityId, @RequestParam("appId") String appId) throws ConsentServiceException {
+		return service.getConsentStatus(userId,municipalityId, appId);
 	}
 	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/consent", method = RequestMethod.POST)
 	public void setConsentStatus(@RequestBody UpdateConsent updateConsent) throws ConsentServiceException {
-		service.setConsentStatus(updateConsent.getUserId(), updateConsent.getAppId(), updateConsent.getConsent());
+		service.setConsentStatus(updateConsent.getUserId(),updateConsent.getMunicipalityId(), updateConsent.getAppId(), updateConsent.getConsent());
 	}
 	
 	
@@ -90,6 +88,5 @@ public class ConsentController extends AbstractController {
 		LOGGER.info("Looking up in sessionData with key: " + uidKey);
 		String rv = data.getUserAttributes().get(uidKey).get(0);
 		return rv;
-	}		
-	
+	}
 }

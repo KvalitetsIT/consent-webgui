@@ -7,8 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+@Component
 public class LoggingInterceptor extends HandlerInterceptorAdapter {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(LoggingInterceptor.class);

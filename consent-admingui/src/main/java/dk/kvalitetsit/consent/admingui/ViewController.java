@@ -1,6 +1,7 @@
 package dk.kvalitetsit.consent.admingui;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -33,7 +34,9 @@ public class ViewController {
     @RequestMapping("/")
     public String frontPage(Model model) {  
     	List<ConsentTemplateTO> tos = consentService.getAllActiveConsentTemplates();
-    	model.addAttribute("consentTemplates", tos); 
+    	List<String> municipalities = tos.stream().map(to -> to.getMunicipality()).distinct().collect(Collectors.toList());
+    	model.addAttribute("consentTemplates", tos);
+    	model.addAttribute("municipalities", municipalities);
     	model.addAttribute("request",new UploadFileRequest());
     	return "index";  
     }
@@ -58,6 +61,7 @@ public class ViewController {
     		req.setContent(Base64Utils.encodeToString(file));
     		req.setMimeType("application/pdf");
     		req.setAppId(request.getAppId());
+    		req.setMunicipality(request.getMunicipality());
     		consentService.updateConsentTemplate(req);
     		model.addAttribute("notification", "Samtykket er nu opdateret");
     	} catch (Exception e) {
@@ -65,7 +69,9 @@ public class ViewController {
     		model.addAttribute("notification", "Fejl ved upload af nyt samtykke");
     	}
     	List<ConsentTemplateTO> tos = consentService.getAllActiveConsentTemplates();
-    	model.addAttribute("consentTemplates", tos); 
+    	model.addAttribute("consentTemplates", tos);
+        List<String> municipalities = tos.stream().map(to -> to.getMunicipality()).distinct().collect(Collectors.toList());
+        model.addAttribute("municipalities", municipalities);
     	model.addAttribute("request",new UploadFileRequest());
     	return "index";   	
     }

@@ -17,6 +17,7 @@
 	<thead>
 		<tr>
 			<th>Applikation</th>
+			<th>Kommune</th>
 			<th>Oprettet</th>
 			<th></th>
 		</tr>
@@ -25,6 +26,7 @@
 	<c:forEach items="${consents}" var="consent">
 		<tr>
         	<td><c:out value="${consent.appName}"/></td>
+        	<td><c:out value="${consent.municipality}"/></td>
         	<td><fmt:formatDate value="${consent.creationDate}"   pattern="dd/MM/yyyy HH:mm"/></td>
         	<td>
         		<a class="btn btn-default" target='_blank' href=showConsentTemplate?templateId=<c:out value="${consent.templateId}"/>>Vis Samtykkeerklæring</a>

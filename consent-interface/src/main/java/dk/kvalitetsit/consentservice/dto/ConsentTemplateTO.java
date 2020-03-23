@@ -8,7 +8,9 @@ public class ConsentTemplateTO {
 	
 	public String friendlyName;	
 	
-	public String notificationSubject;		
+	public String notificationSubject;
+
+	public String municipality;
 
 	public int version;
 
@@ -50,7 +52,13 @@ public class ConsentTemplateTO {
 	
 	public Long getId() {
 		return id;
-	}	
-	
-	
+	}
+
+    public String getMunicipality() {
+        return municipality;
+    }
+
+    public void setMunicipality(String municipality) {
+        this.municipality = municipality;
+    }
 }

@@ -19,6 +19,7 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
         }
 
         $this->_consentserviceurl = $config['consentserviceurl'];
+        $this->_spserviceurl = $config['spserviceurl'];
         $this->_useridattr = $config['useridattr'];
         
         $config = SimpleSAML_Configuration::getInstance();
@@ -38,8 +39,47 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
             '_useridattr'
         );
     }
+
+    public function getMunicipality($userId,$attributeSet, $state)
+    {
+        assert('is_string($userId)');
+        assert('is_string($attributeSet)');
+        $serviceurl = $this->_spserviceurl;
+
+        if($serviceurl == '') {
+            return 0;
+        }
+
+        $attributeSet = $state['Attributes'];
+        $spId = $state['core:SP'];
+        $citizenIdArray = $attributeSet[$this->_useridattr];
+        $citizenId = "";
+        if (is_array($citizenIdArray) && count(citizenIdArray) > 0) {
+            $citizenId = array_values($citizenIdArray)[0];
+        }
+
+        $headers = getallheaders();
+        $corrId = $headers[$this->correlationidheadername];
+
+        $jsonContent = '{"cpr": "'.$citizenId.'"}';
+        $curl = curl_init($serviceurl);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonContent);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+    	    'Content-Length: ' . strlen($jsonContent),
+    	    $this->correlationidheadername.': '.$corrId
+        ));
+        $curl_response = curl_exec($curl);
+        $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $result = json_decode($curl_response);
+        curl_close($curl);
+        $kommuneKode = $result->{'kommuneKode'};
+        return $kommuneKode;
+    }
  
-    public function hasConsent($userId, $destinationId, $attributeSet) {
+    public function hasConsent($userId, $municipality, $destinationId, $attributeSet) {
 		hasConsentMore($userId, $destinationId, $attributeSet, array());  
 	}
 	
@@ -56,7 +96,7 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
      * @return bool True if the user has given consent earlier, false if not
      *              (or on error).
      */
-    public function hasConsentMore($userId, $destinationId, $attributeSet, &$state)
+    public function hasConsentMore($userId, $municipality, $destinationId, $attributeSet, &$state)
     {
         assert('is_string($userId)');
         assert('is_string($destinationId)');
@@ -71,7 +111,7 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
         } 
         
          
-        $qry_str = '?userId='.$citizenId.'&appId='.$spId;
+        $qry_str = '?userId='.$citizenId.'&appId='.$spId.'&municipalityId='.$municipality;
         $serviceurl = $this->_consentserviceurl.$qry_str;
         
         $headers = getallheaders();    	
@@ -88,7 +128,7 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
         $result = json_decode($curl_response);
        	curl_close($curl);
         // TODO tjek assert('$httpcode == 200');
-
+        SimpleSAML_Logger::info($curl_response);
        	$status = $result->{'status'};
        	
        	
@@ -119,16 +159,16 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
      *
      * @return void|true True if consent is deleted 
      */
-    public function saveConsent($userId, $destinationId, $attributeSet)
+    public function saveConsent($userId, $municipality, $destinationId, $attributeSet)
     {
         assert('is_string($userId)');
         assert('is_string($destinationId)');
         assert('is_string($attributeSet)');
 
-        return saveConsentMore($userId, $destinationId, $attributeSet, array());
+        return saveConsentMore($userId, $municipality, $destinationId, $attributeSet, array());
     }
 
-    public function saveConsentMore($userId, $destinationId, $attributeSet, $state)
+    public function saveConsentMore($userId, $municipality, $destinationId, $attributeSet, $state)
     {
         assert('is_string($userId)');
         assert('is_string($destinationId)');
@@ -145,6 +185,7 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
         
         $updateConsent = array(
     		"userId" => $citizenId,
+    		"municipalityId" =>  $municipality,
     		"appId" => $spId,
     		"consent" => "true"
 		);
@@ -183,9 +224,10 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
      *
      * @return int Number of consents deleted
      */
-    public function deleteConsent($userId, $destinationId)
+    public function deleteConsent($userId, $municipality, $destinationId)
     {
         assert('is_string($userId)');
+        assert('is_string($municipality)');
         assert('is_string($destinationId)');
 
     }

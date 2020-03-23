@@ -7,6 +7,8 @@ public class UpdateConsentTemplateRequest {
 	public String content;
 	
 	public String mimeType;
+
+	public String municipality;
 	
 	public String getAppId() {
 		return appId;
@@ -32,5 +34,11 @@ public class UpdateConsentTemplateRequest {
 		this.mimeType = mimeType;
 	}
 
+    public String getMunicipality() {
+        return municipality;
+    }
 
+    public void setMunicipality(String municipality) {
+        this.municipality = municipality;
+    }
 }

@@ -46,7 +46,6 @@ services:
       - IDP_PROTOCOL=http
       - SOURCE_IDP_URL=http://localhost:8090/citizenidp/saml2/idp/metadata.php
       - CONSENT_SERVICE_URL=http://consentservice/api/consent
-      - SP_SERVICE_URL=http://spmock:8080/getKommuneKode
       - USER_ID_ATTR=urn:dk:gov:saml:cprNumberIdentification
       - IDP_THEME=kitmodule:kittheme
       - LOG_LEVEL=INFO
@@ -63,7 +62,7 @@ services:
       - NOTIFICATION_SERVICE_URL=http://jsontomqservice:8090/notificationservice
       - UID_KEY=urn:dk:gov:saml:cprNumberIdentification
       - USERSERVICE_URL=http://usercontext:9200
-      - FLYWAY_PLACEHOLDERS_MUNICIPALITY=561
+      - FLYWAY_PLACEHOLDERS_MUNICIPALITY=0
     ports:
       - "8097:80"
   mongo:

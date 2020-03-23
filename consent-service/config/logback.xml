@@ -10,7 +10,7 @@
 						"service":"${consent-service}",
 						"logger": "%logger",
 						"level": "%level",
-						"correlation-id": "%mdc{correlation-id}",
+						"correlation-id": "%mdc{${correlation-id}}",
 						"thread": "%thread",
 						"message": "%m"
 						}

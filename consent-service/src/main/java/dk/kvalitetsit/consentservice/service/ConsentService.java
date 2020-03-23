@@ -3,7 +3,9 @@ package dk.kvalitetsit.consentservice.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
+import dk.kvalitetsit.consentservice.entity.Municipality;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +39,14 @@ public class ConsentService {
 	
 	@Autowired
 	ConsentNotificationService notificationService;
+
+	@Autowired
+    MunicipalityService municipalityService;
 	
-	public ConsentStatus getConsentStatus(String userId, String appId) throws ConsentServiceException {
+	public ConsentStatus getConsentStatus(String userId,Integer MunicipalityId, String appId) throws ConsentServiceException {
 		LOGGER.info("Checking consent for: " + appId);
-		ConsentTemplate template = getActiveForAppId(appId);
+        Optional<Municipality> municipality = municipalityService.getMunicipality(MunicipalityId);
+        ConsentTemplate template = getActiveForAppId(appId,municipality.map(Municipality::getId).orElse(0));
 		if (template == null) {
 			//No consent configured for this appid - allow user to continue;
 			ConsentStatus rv = new ConsentStatus();
@@ -53,7 +59,7 @@ public class ConsentService {
 			rv.setStatus(Status.UNANSWERED);
 			//we do not currently have consent for appId - but we may have given consent for an older version
 			//we need special status for this
-			List<ConsentTemplate> oldTemplates = consentTemplateRepository.findByAppIdAndActive(appId,false);
+			List<ConsentTemplate> oldTemplates = consentTemplateRepository.findByAppIdAndMunicipalityIdAndActive(appId,municipality.map(Municipality::getId).orElse(0),false);
 			for (ConsentTemplate oldTemplate : oldTemplates) {
 				Consent oldConsent = getConsentForTemplateAndUser(oldTemplate, userId);
 				if (oldConsent != null && oldConsent.isAnswer()) {
@@ -74,8 +80,9 @@ public class ConsentService {
 		return rv;
 	}
 	
-	public void setConsentStatus(String userId, String appId, boolean consent) throws ConsentServiceException {
-		ConsentTemplate template = getTemplate(appId);
+	public void setConsentStatus(String userId, Integer municipalityId, String appId, boolean consent) throws ConsentServiceException {
+        Optional<Municipality> municipality = municipalityService.getMunicipality(municipalityId);
+        ConsentTemplate template = getTemplate(appId,municipality.map(Municipality::getId).orElse(0));
 		Consent consentFromDb = getConsentForTemplateAndUser(template, userId);
 		if (consentFromDb != null) {
 			consentFromDb.setAnswer(consent);
@@ -84,6 +91,7 @@ public class ConsentService {
 			Consent newConsent = new Consent();
 			newConsent.setAnswer(consent);
 			newConsent.setConsentTemplate(template);
+			newConsent.setMunicipality(municipality.orElse(null));
 			newConsent.setCitizenId(userId);
 			newConsent.setCreationDate(new Date());
 			consentRepository.save(newConsent);
@@ -94,8 +102,8 @@ public class ConsentService {
 		}
 	}
 	
-	private ConsentTemplate getTemplate(String appId) throws ConsentServiceException {
-		ConsentTemplate template = getActiveForAppId(appId);
+	private ConsentTemplate getTemplate(String appId,int municipalityId) throws ConsentServiceException {
+		ConsentTemplate template = getActiveForAppId(appId,municipalityId);
 		if (template != null) {
 			return template;
 		} else {
@@ -115,10 +123,14 @@ public class ConsentService {
 		if (isBlank(addConsentTemplateRequest.getFriendlyName())) { throw new ConsentServiceException("friendlyName must be set"); }
 		if (isBlank(addConsentTemplateRequest.getMimeType())) { throw new ConsentServiceException("mimeType must be set"); }
 		if (isBlank(addConsentTemplateRequest.getNotificationSubject())) { throw new ConsentServiceException("notificationSubject must be set"); }		
-		if (getActiveForAppId(addConsentTemplateRequest.getAppId()) != null ) { throw new ConsentServiceException("appId already exists, use updateConsentTemplate instead"); }
+		if (isBlank(addConsentTemplateRequest.getMunicipalityId())) { throw new ConsentServiceException("municipalityID must be set"); }
+        Municipality municipality = municipalityService.findByName(addConsentTemplateRequest.getMunicipalityId());
+        if (municipality == null) { throw new ConsentServiceException("Municipality: "+addConsentTemplateRequest.getMunicipalityId()+" not found"); }
+        if (getActiveForAppId(addConsentTemplateRequest.getAppId(),municipality.getId()) != null ) { throw new ConsentServiceException("appId already exists, use updateConsentTemplate instead"); }
 		
 		template.setActive(true);
 		template.setVersion(1);
+		template.setMunicipality(municipality);
 		template.setAppId(addConsentTemplateRequest.getAppId());
 		template.setContent(addConsentTemplateRequest.getContent());
 		template.setFriendlyName(addConsentTemplateRequest.getFriendlyName());
@@ -133,8 +145,11 @@ public class ConsentService {
 		if (isBlank(updateConsentTemplateRequest.getAppId())) { throw new ConsentServiceException("appId must be set"); }
 		if (isBlank(updateConsentTemplateRequest.getContent())) { throw new ConsentServiceException("content must be set"); }
 		if (isBlank(updateConsentTemplateRequest.getMimeType())) { throw new ConsentServiceException("mimeType must be set"); }
-		
-		ConsentTemplate oldTemplate = getTemplate(updateConsentTemplateRequest.getAppId());
+		if (isBlank(updateConsentTemplateRequest.getMunicipality())) { throw new ConsentServiceException("municipality must be set"); }
+        Municipality municipality = municipalityService.findByName(updateConsentTemplateRequest.getMunicipality());
+        if (municipality == null) { throw new ConsentServiceException("Municipality: "+updateConsentTemplateRequest.getMunicipality()+" not found"); }
+
+		ConsentTemplate oldTemplate = getTemplate(updateConsentTemplateRequest.getAppId(),municipality.getId());
 		
 		oldTemplate.setActive(false);
 		
@@ -147,14 +162,18 @@ public class ConsentService {
 		newTemplate.setFriendlyName(oldTemplate.getFriendlyName());
 		newTemplate.setMimeType(updateConsentTemplateRequest.getMimeType());
 		newTemplate.setNotificationSubject(oldTemplate.getNotificationSubject());
-		
+		newTemplate.setMunicipality(oldTemplate.getMunicipality());
 		consentTemplateRepository.save(oldTemplate);
 		consentTemplateRepository.save(newTemplate);
 		
 	}	
 	
-	private ConsentTemplate getActiveForAppId(String appId) throws ConsentServiceException {
-		List<ConsentTemplate> templates = consentTemplateRepository.findByAppIdAndActive(appId,true);
+	private List<ConsentTemplate> getActiveForAppId(String appId) throws ConsentServiceException {
+	    return consentTemplateRepository.findByAppIdAndActive(appId,true);
+    }
+
+	private ConsentTemplate getActiveForAppId(String appId,int municipalityId) throws ConsentServiceException {
+		List<ConsentTemplate> templates = consentTemplateRepository.findByAppIdAndMunicipalityIdAndActive(appId,municipalityId,true);
 		if (templates.size() == 1) {
 			return templates.get(0);
 		} else if (templates.size() == 0) {
@@ -180,6 +199,7 @@ public class ConsentService {
 			cdto.setId(c.getId());
 			cdto.setTemplateId(c.getConsentTemplate().getId());
 			cdto.setTemplateActive(c.getConsentTemplate().isActive());
+			cdto.setMunicipality(c.getMunicipality().getName());
 			rv.add(cdto);
 		}
 		ConsentDTOs dtos = new ConsentDTOs();
@@ -188,10 +208,11 @@ public class ConsentService {
 	}
 
 	public void revokeConsent(String userId, long consentId) throws ConsentServiceException {
-		Consent c = consentRepository.findOne(consentId);
-		if (c == null) {
+		Optional<Consent> oc = consentRepository.findById(consentId);
+		if (!oc.isPresent()) {
 			throw new ConsentServiceException("Consent does not exist");
 		}
+		Consent c = oc.get();
 		if (!c.getCitizenId().equals(userId)) {
 			throw new ConsentServiceException("Consent does not belong to current user");
 		}
@@ -201,11 +222,14 @@ public class ConsentService {
 	}
 
 	public ConsentTemplateDTO getConsentTemplate(long consentTemplateId) {
-		ConsentTemplate ct = consentTemplateRepository.findOne(consentTemplateId);
-		ConsentTemplateDTO rv = new ConsentTemplateDTO();
-		rv.setMimeType(ct.getMimeType());
-		rv.setContent(ct.getContent());
-		return rv;
+		Optional<ConsentTemplate> ct = consentTemplateRepository.findById(consentTemplateId);
+		if(ct.isPresent()) {
+            ConsentTemplateDTO rv = new ConsentTemplateDTO();
+            rv.setMimeType(ct.get().getMimeType());
+            rv.setContent(ct.get().getContent());
+            return rv;
+        }
+		return null;
 	}
 
 	public ConsentTemplateTOs getAllActiveConsentTemplates() {
@@ -218,6 +242,7 @@ public class ConsentService {
 			ctto.setVersion(t.getVersion());
 			ctto.setNotificationSubject(t.getNotificationSubject());
 			ctto.setId(t.getId());
+			ctto.setMunicipality(t.getMunicipality().getName());
 			rvlist.add(ctto);
 		}
 		

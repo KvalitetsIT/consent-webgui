@@ -8,6 +8,8 @@ public class UploadFileRequest {
 	
 	private String appId;
 
+	private String municipality;
+
 	public MultipartFile getPdfFile() {
 		return pdfFile;
 	}
@@ -24,4 +26,11 @@ public class UploadFileRequest {
 		this.appId = appId;
 	}
 
+    public String getMunicipality() {
+        return municipality;
+    }
+
+    public void setMunicipality(String municipality) {
+        this.municipality = municipality;
+    }
 }

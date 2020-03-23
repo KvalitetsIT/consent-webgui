@@ -37,5 +37,4 @@ fi
 
 envsubst < /consent/template/application.properties > /app/application.properties
 envsubst < /consent/template/logback.xml > /app/logback-spring.xml
-
 java -jar consent-admingui.war

@@ -11,6 +11,8 @@ public class ConsentDTO {
 	public long templateId;
 	
 	public String appName;
+
+	public String municipality;
 	
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 	public Date creationDate;
@@ -68,4 +70,11 @@ public class ConsentDTO {
 		this.templateActive = templateActive;
 	}
 
+    public String getMunicipality() {
+        return municipality;
+    }
+
+    public void setMunicipality(String municipality) {
+        this.municipality = municipality;
+    }
 }

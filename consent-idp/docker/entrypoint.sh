@@ -41,6 +41,7 @@ envsubst < /templates/apache2.conf > /etc/apache2/apache2.conf
 sed -i "s|SOURCE_IDP_URL|$SOURCE_IDP_URL|g" /var/simplesamlphp/config/authsources.php
 
 sed -i "s|__CONSENT_SERVICE_URL__|$CONSENT_SERVICE_URL|g" /var/simplesamlphp/config/config.php
+sed -i "s|__SP_SERVICE_URL__|$SP_SERVICE_URL|g" /var/simplesamlphp/config/config.php
 sed -i "s|__USER_ID_ATTR__|$USER_ID_ATTR|g" /var/simplesamlphp/config/config.php
 sed -i "s|__LOG_LEVEL__|$LOG_LEVEL|g" /var/simplesamlphp/config/config.php
 sed -i "s|__CORRELATION_ID__|$CORRELATION_ID|g" /var/simplesamlphp/config/config.php

@@ -9,16 +9,11 @@ import org.springframework.context.annotation.Configuration;
 
 @EnableAutoConfiguration
 @Configuration
-@ComponentScan("dk.kvalitetsit.consent.webgui")
+@ComponentScan
 public class Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
-	}
-
-	@Bean
-	public static PropertyPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-		return new PropertyPlaceholderConfigurer();
 	}
 
 }
