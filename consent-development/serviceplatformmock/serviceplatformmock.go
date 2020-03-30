@@ -35,7 +35,10 @@ func main() {
         panic(err)
     }
     json.Unmarshal(data,people)
+    http.HandleFunc("/spmock/getKommuneKode", handler)
     http.HandleFunc("/getKommuneKode", handler)
+    http.HandleFunc("/spmock/info", statusHandler)
+    http.HandleFunc("/info", statusHandler)
     fmt.Println("Ready to serve")
     err = http.ListenAndServe(":8080",nil)
     if err != nil {
@@ -43,6 +46,9 @@ func main() {
     }
 }
 
+func statusHandler(w http.ResponseWriter, r *http.Request) {
+    w.Write([]byte("OK"))
+}
 func handler(w http.ResponseWriter, r *http.Request) {
     request := &FetchKommuneKodeRequest{}
     body,_ := ioutil.ReadAll(r.Body)
