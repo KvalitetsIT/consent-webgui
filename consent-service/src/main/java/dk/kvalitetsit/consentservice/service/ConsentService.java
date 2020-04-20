@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import dk.kvalitetsit.consentservice.entity.Municipality;
 import org.slf4j.Logger;
@@ -45,7 +46,18 @@ public class ConsentService {
 	
 	public ConsentStatus getConsentStatus(String userId,Integer MunicipalityId, String appId) throws ConsentServiceException {
 		LOGGER.info("Checking consent for: " + appId);
-        Optional<Municipality> municipality = municipalityService.getMunicipality(MunicipalityId);
+        Optional<Municipality> municipality = Optional.empty();
+		if(MunicipalityId != null) {
+            municipality = municipalityService.getMunicipality(MunicipalityId);
+        }
+        if(municipality.isEmpty()) {
+            //Try to look up municipality from previous consents
+            List<Consent> byCitizenId = consentRepository.findByCitizenId(userId);
+            List<Municipality> municipalities = byCitizenId.stream().map(c -> c.getMunicipality()).distinct().collect(Collectors.toList());
+            if(municipalities.size() == 1) {
+                municipality = Optional.of(municipalities.get(0));
+            }
+        }
         ConsentTemplate template = getActiveForAppId(appId,municipality.map(Municipality::getId).orElse(0));
 		if (template == null) {
 			//No consent configured for this appid - allow user to continue;
@@ -57,7 +69,7 @@ public class ConsentService {
 		ConsentStatus rv = new ConsentStatus();
 		if (consent == null) {
 			rv.setStatus(Status.UNANSWERED);
-			//we do not currently have consent for appId - but we may have given consent for an older version
+			//we do not currently have consent for appId - but we may have given consent for an older versionconfig
 			//we need special status for this
 			List<ConsentTemplate> oldTemplates = consentTemplateRepository.findByAppIdAndMunicipalityIdAndActive(appId,municipality.map(Municipality::getId).orElse(0),false);
 			for (ConsentTemplate oldTemplate : oldTemplates) {
