@@ -101,6 +101,7 @@ $t->data['attributes'] = $attributes;
 $t->data['checked'] = $state['consent:checked'];
 $t->data['dstName'] = $state['consent:friendlyName'];
 $t->data['acceptText'] = $state['consent:acceptText'];
+$t->data['canAccept'] = $state['consent:canAccept'];
 
 // Fetch privacypolicy
 if (array_key_exists('privacypolicy', $state['Destination'])) {

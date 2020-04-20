@@ -131,17 +131,22 @@ class sspmod_consent_Consent_Store_ConsentService extends sspmod_consent_Store
         SimpleSAML_Logger::info($curl_response);
        	$status = $result->{'status'};
        	
-       	
-       	if ($status == 'UNANSWERED' || $status == 'DEPRECATED') {
+       	$state['consent:canAccept'] = true;
+       	if ($status == 'UNANSWERED' || $status == 'DEPRECATED' || $status == 'NO_MUNICIPALITY') {
        		$state['consent:template.content'] =  $result->{'templateContent'};
        		$state['consent:template.mimetype'] = $result->{'templateMimeType'}; 
        		$state['consent:friendlyName'] = $result->{'friendlyName'};  
        		
        		if ($status == 'UNANSWERED') {
        			$state['consent:acceptText'] = '{consent:consent:consent_accept}';
-       		} else {
+       			$state['consent:municipality'] = $result->{'municipalityId'};;
+       		} else if ($status == 'DEPRECATED'){
        			$state['consent:acceptText'] = '{consent:consent:consent_accept_deprecated}';
-       		}     	
+       			$state['consent:municipality'] = $result->{'municipalityId'};;
+       		}  else if ($status == 'NO_MUNICIPALITY') {
+       		    $state['consent:acceptText'] = '{consent:consent:consent_accept_no_municipality}';
+       		    $state['consent:canAccept'] = false;
+       		}
        	}   	
        	
         return ($status == 'ACCEPTED'); 	    

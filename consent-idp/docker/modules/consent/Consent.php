@@ -248,7 +248,7 @@ class sspmod_consent_Auth_Process_Consent extends SimpleSAML_Auth_ProcessingFilt
 
                 $state['consent:store']              = $this->_store;
                 $state['consent:store.userId']       = $userId;
-                $state['consent:store.municipality'] = $municipality;
+                $state['consent:store.municipality'] = $state['consent:municipality'];
                 $state['consent:store.destination']  = $targetedId;
                 $state['consent:store.attributeSet'] = $attributeSet;
             } catch (Exception $e) {

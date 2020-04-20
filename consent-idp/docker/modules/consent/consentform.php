@@ -55,9 +55,7 @@ $this->includeAtTemplateBase('includes/header.php');
 
 <p>
 <?php
-SimpleSAML_Logger::info('***********');
 echo $this->t( $this->data['acceptText'], array( 'SPNAME' => $dstName ) );
-SimpleSAML_Logger::info('xxxxxxxxxx');
 if (array_key_exists('descr_purpose', $this->data['dstMetadata'])) {
     echo '</p><p>' . $this->t(
         '{consent:consent:consent_purpose}', 
@@ -74,7 +72,9 @@ if (array_key_exists('descr_purpose', $this->data['dstMetadata'])) {
 }
 ?>
 </p>
-
+<?php
+  if ($this->data['canAccept']) {
+?>
 <form style="display: inline; margin: 0px; padding: 0px" action="<?php echo htmlspecialchars($this->data['yesTarget']); ?>">
 <p style="margin: 1em">
 
@@ -114,12 +114,6 @@ foreach ($this->data['noData'] as $name => $value) {
 	
 </script>
 
-<?php
-
-$pdfurl = "../../getconsenttemplate.php?StateId=".$_REQUEST['StateId'];
-
-echo "<a target='_blank' id='seeconsentbutton' class='btn btn-default' href='pdfjs/web/viewer.html?file=".urlencode($pdfurl)."'>".$this->t('{consent:consent:seeconsent}')."</a>";
-	
 $this->includeAtTemplateBase('includes/footer.php');
 
 ?>

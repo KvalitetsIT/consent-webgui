@@ -2,7 +2,7 @@ package dk.kvalitetsit.consentservice.dto;
 
 public class ConsentStatus {
 
-	public enum Status { ACCEPTED, NOT_ACCEPTED, UNANSWERED, DEPRECATED };
+	public enum Status { ACCEPTED, NOT_ACCEPTED, UNANSWERED, DEPRECATED,NO_MUNICIPALITY };
 	
 	public String templateContent;
 	
@@ -11,6 +11,8 @@ public class ConsentStatus {
 	public String friendlyName;
 
 	public Status status;
+
+	public Integer municipalityId;
 
 	public String getTemplateContent() {
 		return templateContent;
@@ -44,4 +46,11 @@ public class ConsentStatus {
 		this.friendlyName = friendlyName;
 	}
 
+    public Integer getMunicipalityId() {
+        return municipalityId;
+    }
+
+    public void setMunicipalityId(Integer municipalityId) {
+        this.municipalityId = municipalityId;
+    }
 }

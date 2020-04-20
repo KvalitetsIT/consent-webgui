@@ -56,6 +56,10 @@ public class ConsentService {
             List<Municipality> municipalities = byCitizenId.stream().map(c -> c.getMunicipality()).distinct().collect(Collectors.toList());
             if(municipalities.size() == 1) {
                 municipality = Optional.of(municipalities.get(0));
+            } else {
+                ConsentStatus rv = new ConsentStatus();
+                rv.setStatus(Status.NO_MUNICIPALITY);
+                return rv;
             }
         }
         ConsentTemplate template = getActiveForAppId(appId,municipality.map(Municipality::getId).orElse(0));
@@ -67,6 +71,7 @@ public class ConsentService {
 		}
 		Consent consent = getConsentForTemplateAndUser(template, userId);
 		ConsentStatus rv = new ConsentStatus();
+		rv.setMunicipalityId(municipality.map(Municipality::getId).orElse(0));
 		if (consent == null) {
 			rv.setStatus(Status.UNANSWERED);
 			//we do not currently have consent for appId - but we may have given consent for an older versionconfig
