@@ -50,7 +50,7 @@ public class ConsentService {
 		if(MunicipalityId != null) {
             municipality = municipalityService.getMunicipality(MunicipalityId);
         }
-        if(municipality.isEmpty()) {
+        if(!municipality.isPresent()) {
             //Try to look up municipality from previous consents
             List<Consent> byCitizenId = consentRepository.findByCitizenId(userId);
             List<Municipality> municipalities = byCitizenId.stream().map(c -> c.getMunicipality()).distinct().collect(Collectors.toList());
