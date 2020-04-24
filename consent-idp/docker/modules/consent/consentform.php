@@ -114,6 +114,12 @@ foreach ($this->data['noData'] as $name => $value) {
 	
 </script>
 
+<?php
+
+$pdfurl = "../../getconsenttemplate.php?StateId=".$_REQUEST['StateId'];
+
+echo "<a target='_blank' id='seeconsentbutton' class='btn btn-default' href='pdfjs/web/viewer.html?file=".urlencode($pdfurl)."'>".$this->t('{consent:consent:seeconsent}')."</a>";
+}
 $this->includeAtTemplateBase('includes/footer.php');
 
 ?>
