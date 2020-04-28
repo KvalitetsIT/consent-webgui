@@ -18,7 +18,7 @@
 		"en": "Der er kommet en ny samtykkeerklæring for applikationen \"SPNAME\", som du skal læse og acceptere før du kan fortsætte. Knappen \"Læs samtykkeerklæring\" åbner et nyt vindue. Du skal lukke vinduet for at komme tilbage til denne side."
 	},
     "consent_accept_no_municipality": {
-      "en": "Der er ikke muligt at finde kommunekoden for brugeren, og der er ikke tidligere afgivet samtykke. Derfor kan applikationen ikke anvendes."
+      "en": "Det er ikke muligt at finde kommunekoden for brugeren, derfor kan applikationen ikke anvendes.",
     },
 	"login": {
 		"en": "login"
