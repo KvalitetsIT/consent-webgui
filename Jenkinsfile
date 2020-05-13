@@ -10,6 +10,7 @@ podTemplate(
             script: "git rev-parse HEAD",
             returnStdout: true
           )
+          echo commitID
           environment{
             GIT_COMMIT=commitID
           }
@@ -26,7 +27,7 @@ podTemplate(
                 }
              }
         }
-        stage('Tag Docker Images And Push') {
+        /*stage('Tag Docker Images And Push') {
             container('docker') {
                 def images = ["kvalitetsit/consent-service", "kvalitetsit/consent-idp", "kvalitetsit/consent-webgui", "kvalitetsit/consent-admingui"]
                 docker.withRegistry('', 'dockerhub') {
@@ -42,6 +43,6 @@ podTemplate(
                     }
                 }
             }
-        }
+        }*/
     }
  }
