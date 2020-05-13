@@ -7,8 +7,6 @@ podTemplate(
         stage('Clone repository') {
           def scmVars = checkout scm
           env.GIT_COMMIT = scmVars.GIT_COMMIT
-          echo "env.GIT_COMMIT"
-          echo "${env.GIT_COMMIT}"
         }
         stage('Initialize') {
           currentBuild.displayName = "$currentBuild.displayName-${env.GIT_COMMIT}"
@@ -22,7 +20,7 @@ podTemplate(
                 }
              }
         }
-        /*stage('Tag Docker Images And Push') {
+        stage('Tag Docker Images And Push') {
             container('docker') {
                 def images = ["kvalitetsit/consent-service", "kvalitetsit/consent-idp", "kvalitetsit/consent-webgui", "kvalitetsit/consent-admingui"]
                 docker.withRegistry('', 'dockerhub') {
@@ -38,6 +36,6 @@ podTemplate(
                     }
                 }
             }
-        }*/
+        }
     }
  }
