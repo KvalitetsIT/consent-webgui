@@ -5,7 +5,17 @@ podTemplate(
 ) {
     node(POD_LABEL) {
         stage('Clone repository') {
-            checkout scm
+          checkout scm
+          def commitID = sh(
+            script: "git rev-parse HEAD",
+            returnStdout: true
+          )
+          environment{
+            GIT_COMMIT=commitID
+          }
+        }
+        stage('Initialize') {
+          currentBuild.displayName = "$currentBuild.displayName-${env.GIT_COMMIT}"
         }
         stage('Build And Test') {
             container('docker') {
@@ -18,14 +28,10 @@ podTemplate(
         }
         stage('Tag Docker Images And Push') {
             container('docker') {
-                def commitID = commits = sh(
-                        script: "git rev-parse HEAD",
-                        returnStdout: true
-                )
                 def images = ["kvalitetsit/consent-service", "kvalitetsit/consent-idp", "kvalitetsit/consent-webgui", "kvalitetsit/consent-admingui"]
                 docker.withRegistry('', 'dockerhub') {
                     for (image in images) {
-                        img = docker.image(image + ":${commitID}")
+                        img = docker.image(image + ":${env.GIT_COMMIT}")
                         img.push("${env.GIT_COMMIT}")
                         img.push("dev")
                         if (env.TAG_NAME != null && env.TAG_NAME.matches("^v[0-9]*\\.[0-9]*\\.[0-9]*")) {
