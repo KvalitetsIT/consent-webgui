@@ -12,7 +12,7 @@ podTemplate(
         }
         stage('Build And Test') {
             container('docker') {
-                def maven = docker.image('maven:3-openjdk-13')
+                def maven = docker.image('maven:3-openjdk-14')
                 maven.pull()
                 maven.inside("-v /var/run/docker.sock:/var/run/docker.sock") {
                     sh 'mvn install'
