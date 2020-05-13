@@ -5,15 +5,10 @@ podTemplate(
 ) {
     node(POD_LABEL) {
         stage('Clone repository') {
-          checkout scm
-          def commitID = sh(
-            script: "git rev-parse HEAD",
-            returnStdout: true
-          )
-          echo commitID
-          environment{
-            GIT_COMMIT=commitID
-          }
+          def scmVars = checkout scm
+          env.GIT_COMMIT = scmVars.GIT_COMMIT
+          echo "env.GIT_COMMIT"
+          echo "${env.GIT_COMMIT}"
         }
         stage('Initialize') {
           currentBuild.displayName = "$currentBuild.displayName-${env.GIT_COMMIT}"
