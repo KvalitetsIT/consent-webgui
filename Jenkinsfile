@@ -8,7 +8,7 @@ podTemplate(
             checkout scm
         }
         stage('Initialize') {
-           currentBuild.displayName = "$currentBuild.displayName-${env.GIT_COMMIT}"
+           sh 'env'
         }
         stage('Build And Test') {
             container('docker') {
