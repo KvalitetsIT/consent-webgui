@@ -3,6 +3,7 @@ package dk.kvalitetsit.consentservice.configuration;
 import javax.sql.DataSource;
 
 import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.configuration.ClassicConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,11 +23,13 @@ public class FlywayConfiguration {
 	@Bean(initMethod = "migrate")
 	public Flyway flyway(DataSource dataSource) {
         //Flyway flyway = Flyway.configure().dataSource(dataSource).load();
-		Flyway flyway = new Flyway();
-		flyway.setDataSource(dataSource);
-		flyway.setLocations("db/migration/");
-        Map<String, String> placeholders = getPlaceholders();
-        flyway.setPlaceholders(placeholders);
+		Map<String, String> placeholders = getPlaceholders();
+		Flyway flyway = Flyway
+				.configure()
+				.dataSource(dataSource)
+				.locations("db/migration/")
+				.placeholders(placeholders).load();
+
 		return flyway;
 	}
 
