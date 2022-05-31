@@ -1,15 +1,13 @@
 package dk.kvalitetsit.consentservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import dk.kvalitetsit.consentservice.dto.AddConsentTemplateRequest;
 import dk.kvalitetsit.consentservice.dto.ConsentDTOs;
@@ -23,10 +21,19 @@ import dk.kvalitetsit.consentservice.service.ConsentService;
 import dk.kvalitetsit.consentservice.service.ConsentServiceException;
 import dk.kvalitetsit.consentservice.service.UserService;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 @RestController
 public class ConsentController extends AbstractController {
 	
 	private static Logger LOGGER = LoggerFactory.getLogger(ConsentController.class);
+
+	private final ObjectMapper mapper = new ObjectMapper();
+
+	private final String sessionDataKey = "sessionData";
 	
 	@Autowired
 	private ConsentService service;
@@ -66,27 +73,29 @@ public class ConsentController extends AbstractController {
 	
 	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/getAllConsents", method = RequestMethod.GET) 
-	public ConsentDTOs getAllConsents() throws ConsentServiceException {	
+	public ConsentDTOs getAllConsents(@RequestHeader(sessionDataKey) String sessionData) throws ConsentServiceException, IOException {
 		LOGGER.info("Received getAllConsents call");
-		String uid = getUid();
+		String uid = getUid(uidKey, sessionData);
 		LOGGER.info("uid is " + uid);
-		return service.getAllConsents(getUid());
+		return service.getAllConsents(uid);
 	}
 	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/revokeConsent", method = RequestMethod.GET) 
-	public void revokeConsent(@RequestParam("consentId") long consentId) throws ConsentServiceException {		
-		service.revokeConsent(getUid(), consentId);
+	public void revokeConsent(@RequestHeader(sessionDataKey) String sessionData, @RequestParam("consentId") long consentId) throws ConsentServiceException, IOException {
+		service.revokeConsent(getUid(uidKey, sessionData), consentId);
 	}
 	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/getConsentTemplate", method = RequestMethod.GET)
 	public ConsentTemplateDTO getConsentTemplate(@RequestParam("consentTemplateId") long consentTemplateId) throws ConsentServiceException {
 		return service.getConsentTemplate(consentTemplateId);
 	}
-	
-	private String getUid() {
-		SessionData data = userService.getSessionData();		
-		LOGGER.info("Looking up in sessionData with key: " + uidKey);
-		String rv = data.getUserAttributes().get(uidKey).get(0);
-		return rv;
+
+	public String getUid(String uidKey, String sessionData) throws IOException {
+		LOGGER.debug("Received session data: " + sessionData);
+		String decodedSessionData = new String(Base64.decodeBase64(sessionData));
+		LOGGER.debug("Decoded received session data: " + decodedSessionData);
+		Map<String, Object> map = mapper.readValue(decodedSessionData, Map.class);
+		LinkedHashMap<String, ArrayList<String>> userAttributes = (LinkedHashMap<String, ArrayList<String>>) map.get("UserAttributes");
+		return userAttributes.get(uidKey).get(0);
 	}
 }
