@@ -75,14 +75,14 @@ public class ConsentController extends AbstractController {
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/getAllConsents", method = RequestMethod.GET) 
 	public ConsentDTOs getAllConsents(@RequestHeader(sessionDataKey) String sessionData) throws ConsentServiceException, IOException {
 		LOGGER.info("Received getAllConsents call");
-		String uid = getUid(uidKey, sessionData);
+		String uid = getUid(mapper, uidKey, sessionData);
 		LOGGER.info("uid is " + uid);
 		return service.getAllConsents(uid);
 	}
 	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/revokeConsent", method = RequestMethod.GET) 
 	public void revokeConsent(@RequestHeader(sessionDataKey) String sessionData, @RequestParam("consentId") long consentId) throws ConsentServiceException, IOException {
-		service.revokeConsent(getUid(uidKey, sessionData), consentId);
+		service.revokeConsent(getUid(mapper, uidKey, sessionData), consentId);
 	}
 	
 	@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/api/getConsentTemplate", method = RequestMethod.GET)
@@ -90,7 +90,7 @@ public class ConsentController extends AbstractController {
 		return service.getConsentTemplate(consentTemplateId);
 	}
 
-	public String getUid(String uidKey, String sessionData) throws IOException {
+	public static String getUid(ObjectMapper mapper, String uidKey, String sessionData) throws IOException {
 		String decodedSessionData = new String(Base64.decodeBase64(sessionData));
 		Map<String, Object> map = mapper.readValue(decodedSessionData, Map.class);
 		LinkedHashMap<String, ArrayList<String>> userAttributes = (LinkedHashMap<String, ArrayList<String>>) map.get("UserAttributes");
