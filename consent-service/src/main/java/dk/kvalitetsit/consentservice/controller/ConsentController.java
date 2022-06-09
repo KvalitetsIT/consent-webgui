@@ -91,9 +91,9 @@ public class ConsentController extends AbstractController {
 	}
 
 	public String getUid(String uidKey, String sessionData) throws IOException {
-		LOGGER.debug("Received session data: " + sessionData);
+		//LOGGER.debug("Received session data: " + sessionData);
 		String decodedSessionData = new String(Base64.decodeBase64(sessionData));
-		LOGGER.debug("Decoded received session data: " + decodedSessionData);
+		//LOGGER.debug("Decoded received session data: " + decodedSessionData);
 		Map<String, Object> map = mapper.readValue(decodedSessionData, Map.class);
 		LinkedHashMap<String, ArrayList<String>> userAttributes = (LinkedHashMap<String, ArrayList<String>>) map.get("UserAttributes");
 		return userAttributes.get(uidKey).get(0);
