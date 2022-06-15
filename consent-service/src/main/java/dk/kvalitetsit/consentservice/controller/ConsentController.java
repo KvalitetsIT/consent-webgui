@@ -76,7 +76,6 @@ public class ConsentController extends AbstractController {
 	public ConsentDTOs getAllConsents(@RequestHeader(sessionDataKey) String sessionData) throws ConsentServiceException, IOException {
 		LOGGER.info("Received getAllConsents call");
 		String uid = getUid(mapper, uidKey, sessionData);
-		LOGGER.info("uid is " + uid);
 		return service.getAllConsents(uid);
 	}
 	
