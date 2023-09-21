@@ -1,0 +1,203 @@
+version: '2'
+services:
+  kitidp-theme:
+    image: kvalitetsit/ekffidptheme:54b06eaf051db57b25409e7c09e1dadcaee032ee
+
+  citizen-keycloak:
+    image: quay.io/keycloak/keycloak:21.1.1-0
+    command: start-dev --http-relative-path /auth --import-realm
+    volumes:
+      - ./config/keycloak/consent-test.json:/opt/keycloak/data/import/consent-test.json
+      - ./config/keycloak/keystore:/keystore
+      - ./config/keycloak-healthcheck/health-check.sh:/opt/keycloak/health-check.sh
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KEYCLOAK_LOGLEVEL=DEBUG
+      - PROXY_ADDRESS_FORWARDING=true
+      - ATTRIBUTE_SERVICE_ENDPOINT=http://consent-service-wsp:80
+      - KC_HTTP_PORT=8080
+      - KC_HEALTH_ENABLED=true
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: "bash /opt/keycloak/health-check.sh"
+
+  sts-client:
+    image: kvalitetsit/sts:1.0.31
+    volumes:
+      - ./config/webgui:/certificates
+      - ./config/sts:/sts-certificates
+      - ./config/config-sts.json:/config/config-sts.json
+      - ./config/trust:/trust
+    environment:
+      - JSON_CLIENT_PATH=/config/config-sts.json
+      - JVM_OPTS=-Djavax.net.debug
+      - LOG_LEVEL=DEBUG
+      - STS_CERTIFICATE=/sts-certificates/certificate.pem
+      - STS_COPY_ATTRIBUTES=urn:dk:gov:saml:cprNumberIdentification
+      - STS_COPY_ATTRIBUTES_ACT_AS=urn:dk:gov:saml:cprNumberIdentification
+      - STS_ISSUER=esbjerg-kommune-sts
+      - STS_KEY=/sts-certificates/key.pem
+      - STS_SUPPORTED_CLAIMS=urn:dk:gov:saml:cprNumberIdentification
+      - STS_TOKEN_LIFETIME=28800
+      - STS_TOKEN_VALID_FROM_OFFSET=30
+      - STS_TRUST_CA_PATH=/trust/*
+      - USE_DB=false
+      - sts_endpoint=sts-client/sts
+
+  citizen-consentidp:
+    image: kvalitetsit/consent-idp:489c05bea1b09d71a1b79337b2fd40654628a454
+    entrypoint: bash -c " ln -nsf /kitmodule /var/simplesamlphp/modules/kitmodule; /entrypoint.sh"
+    depends_on:
+      - kitidp-theme
+    volumes_from:
+      - kitidp-theme
+    volumes:
+      - ./config/consentidp/cert:/cert
+      - ./config/consentidp/consentidp-metadata:/metadata
+    environment:
+      - IDP_CERTIFICATE=certificate.crt
+      - IDP_PRIVATE_KEY=certificate.pem
+      - IDP_ADMIN_PASSWORD=test123
+      - IDP_TECHNICAL_EMAIL=eva@kvalitetsit.dk
+      - IDP_SECRET_SALT=abcd23poiu
+      - IDP_HOSTNAME=localhost:8092
+      - IDP_CONTEXTPATH=consentidp
+      - IDP_PROTOCOL=http
+      - SOURCE_IDP_URL=http://localhost:8080/auth/realms/Consent-test
+      - CONSENT_SERVICE_URL=http://consent-service:8080/consent-service/api/consent
+      - SP_SERVICE_URL=http://spmock:8080/getKommuneKode
+      - USER_ID_ATTR=urn:dk:gov:saml:cprNumberIdentification
+      - IDP_THEME=kitmodule:kittheme
+      - LOG_LEVEL=INFO
+      - CORRELATION_ID=correlation-id
+    ports:
+      - "8092:80"
+    healthcheck:
+      test: curl -f http://localhost:80/consentidp/module.php/core/welcome || exit 1
+
+  mongodb:
+    image: mongo:3.3
+
+  app-a-saml:
+    image: kvalitetsit/kitcaddy:1.3.8
+    command: -config /config/config-app-a.json
+    depends_on:
+      citizen-consentidp:
+        condition: service_healthy
+    volumes:
+      - ./config/appa/config:/certificates
+      - ./config/sts:/sts-certificates
+      - ./config/config-app-a.json:/config/config-app-a.json
+    ports:
+      - "8082:80"
+
+  app-a:
+    image: kvalitetsit/serviceprovider-spviewer:efdd0ca4ca9723ebf0d97316b047e306b597b1f0
+    environment:
+      - PROXY_HOST=app-a-saml
+
+  app-b-saml:
+    image: kvalitetsit/kitcaddy:1.3.8
+    command: -config /config/config-app-b.json
+    depends_on:
+      citizen-consentidp:
+        condition: service_healthy
+    volumes:
+      - ./config/appb/config:/certificates
+      - ./config/sts:/sts-certificates
+      - ./config/config-app-b.json:/config/config-app-b.json
+    ports:
+      - "8084:80"
+
+  app-b:
+    image: kvalitetsit/serviceprovider-spviewer:efdd0ca4ca9723ebf0d97316b047e306b597b1f0
+    environment:
+      - PROXY_HOST=app-b-saml
+
+  consent-service-wsp:
+    image: kvalitetsit/kitcaddy:1.3.8
+    command: -config /config/config-service.json
+    volumes:
+      - ./config/sts/certificate.pem:/sts-certificates/certificate.pem
+      - ./config/config-service.json:/config/config-service.json
+
+  consent-service:
+    image: kvalitetsit/consent-service:11e4c5a7b1ec218859b7ffe797bd303e2c3a53ae
+    environment:
+      - DB_DRIVER=org.mariadb.jdbc.Driver
+      - DB_PASSWORD=consent1234
+      - DB_USERNAME=consent
+      - DB_URL=jdbc:mariadb://mariadb:3306/consent
+      - NOTIFICATION_SERVICE_URL=http://jsontomqservice:8090/notificationservice
+      - UID_KEY=urn:dk:gov:saml:cprNumberIdentification
+      - FLYWAY_PLACEHOLDERS_MUNICIPALITY=561
+      - CONTEXT=consent-service
+      - SERVER_PORT=8080
+      - MAX_HTTP_HEADER_SIZE_IN_BYTES=20000
+
+  mariadb:
+    image: docker.io/bitnami/mariadb-galera:10.6.7-debian-10-r56
+    environment:
+      - MARIADB_ROOT_PASSWORD=my-secret-pw
+      - MARIADB_DATABASE=consent
+      - MARIADB_USER=consent
+      - MARIADB_PASSWORD=consent1234
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "3306:3306"
+
+  rabbitmq:
+    build: rabbitmq
+    image: kihdev/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_VHOST=/
+    ports:
+      - "15672:15672"
+
+  jsontomqservice:
+    image: kvalitetsit/jsontomqservice:94a7069de5055d802e4d6c1b73275206b3be2164
+    environment:
+      - PORT=8090
+      - MQ_URL=amqp://guest:guest@rabbitmq:5672/
+      - CORRELATION_ID_HEADER_NAME=correlation-id
+      - MAPPING=/notificationservice/sendNotification=iti42.exchange
+    links:
+      - rabbitmq
+
+  spmock:
+    build: serviceplatformmock
+    image: kihdev/spmock
+    ports:
+      - "8787:8080"
+
+  consent-webgui:
+    image: kvalitetsit/consent-webgui:latest
+    environment:
+      - CONSENTSERVICE_URL=http://consent-webgui-saml-wsc:9090/consent-service
+      - CONTEXT=cwg
+      - SERVER_PORT=8080
+
+
+  consent-webgui-saml-wsc:
+    image: kvalitetsit/kitcaddy:1.3.8
+    command: -config /config/config-ui.json
+    depends_on:
+      citizen-keycloak:
+        condition: service_healthy
+    volumes:
+      - ./config/webgui:/certificates
+      - ./config/sts/certificate.pem:/sts-certificates/certificate.pem
+      - ./config/config-ui.json:/config/config-ui.json
+    ports:
+      - "8099:80"
+
+  consent-admingui:
+    image: kvalitetsit/consent-admingui:350bd432295664ac4c7be7219ac4d0862a4cface
+    environment:
+      - CONSENTSERVICE_URL=http://consent-service:8080/consent-service
+      - CONTEXT=cag
+      - SERVER_PORT=8080
+    ports:
+      - "8100:8080"

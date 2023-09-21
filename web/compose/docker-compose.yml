@@ -1,0 +1,11 @@
+version: '2'
+services:
+  consent-webgui:
+    image: kvalitetsit/consent-webgui:latest
+    environment:
+      - CONSENTSERVICE_URL=http://consentservice
+      - CONTEXT=cwg
+      - SERVER_PORT=8080
+      - LOG_LEVEL=DEBUG
+    ports:
+      - "8099:8080"

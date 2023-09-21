@@ -1,0 +1,156 @@
+{
+  "logging": {
+    "logs": {
+      "default": {
+        "level": "DEBUG"
+      }
+    }
+  },
+  "admin": {
+    "disabled": true
+  },
+  "apps": {
+    "tls": {
+    },
+    "http": {
+      "servers": {
+
+        "consent-ui-saml": {
+          "listen": [
+            ":80"
+          ],
+          "routes": [
+
+            {
+              "match": [
+                {
+                  "path": [
+                    "/*"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "prometheus",
+                  "metrics_path": "/host/metrics"
+                },
+                {
+                  "handler": "samlprovider",
+                  "session_header_name": "SESSION",
+                  "session_expiry_hours": "1",
+                  "mongo_host": "mongodb",
+                  "mongo_db": "consent-ui-saml",
+                  "audience_restriction": "dev:kit:cwg",
+                  "idp_metadata_url": "http://citizen-keycloak:8080/auth/realms/Consent-test/protocol/saml/descriptor",
+                  "entityId": "dev:kit:cwg",
+                  "sign_authn_req": "true",
+                  "sign_cert_file": "/certificates/cwg.cert",
+                  "sign_key_file": "/certificates/cwg.key",
+                  "external_url": "http://localhost:8099",
+                  "metadata_path": "/cwg/saml/metadata",
+                  "logout_path": "/cwg/saml/logout",
+                  "slo_path": "/cwg/saml/slo",
+                  "sso_path": "/cwg/saml/SSO",
+                  "logout_landing_page": "https://telesund.esbjerg-kommune.t0.hosting.kitkube.dk/samtykke",
+                  "cookie_domain": "localhost",
+                  "cookie_path": "/"
+
+                },
+                {
+                  "handler": "reverse_proxy",
+                  "transport": {
+                    "protocol": "http",
+                    "read_buffer_size": 4096
+                  },
+                  "upstreams": [
+                    {
+                      "dial": "consent-webgui:8080"
+                    }
+                  ]
+                }
+              ]
+            },
+
+            {
+              "match": [
+                {
+                  "path": [
+                    "/"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "reverse_proxy",
+                  "transport": {
+                    "protocol": "http",
+                    "read_buffer_size": 4096
+                  },
+                  "upstreams": [
+                    {
+                      "dial": "localhost:8080"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+
+        "consent-ui-wsc": {
+          "listen": [
+            ":9090"
+          ],
+          "routes": [
+
+            {
+              "match": [
+                {
+                  "path": [
+                    "/*"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "oioidwsrestwsc",
+                  "mongo_host": "mongodb",
+                  "mongo_db": "consent-ui-wsc",
+                  "sts_url": "http://sts-client:8181/sts/service/sts",
+                  "client_cert_file": "/certificates/cwg.cert",
+                  "client_key_file": "/certificates/cwg.key",
+                  "trust_cert_files": [
+                    "/sts-certificates/certificate.pem"
+                  ],
+                  "session_data_url": "http://localhost:80",
+                  "service_endpoint": "http://consent-service-wsp:80/consent-service",
+                  "service_audience": "dev:kit:cwg"
+                },
+                {
+                  "handler": "reverse_proxy",
+                  "transport": {
+                    "protocol": "http",
+                    "read_buffer_size": 4096
+                  },
+                  "upstreams": [
+                    {
+                      "dial": "consent-service-wsp:80"
+                    }
+                  ]
+                ,
+                  "headers": {
+                    "request": {
+                      "set": {
+                        "Host": ["consent-service-wsp:80"]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

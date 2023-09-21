@@ -1,0 +1,78 @@
+{
+  "logging": {
+    "logs": {
+      "default": {
+        "level": "DEBUG"
+      }
+    }
+  },
+  "admin": {
+    "disabled": true
+  },
+  "apps": {
+    "tls": {
+    },
+    "http": {
+      "servers": {
+
+        "consent-app-b-saml": {
+          "listen": [
+            ":80"
+          ],
+          "routes": [
+
+            {
+              "match": [
+                {
+                  "path": [
+                    "/*"
+                  ]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "prometheus",
+                  "metrics_path": "/host/metrics"
+                },
+                {
+                  "handler": "samlprovider",
+                  "session_header_name": "SESSION",
+                  "session_expiry_hours": "1",
+                  "mongo_host": "mongodb",
+                  "mongo_db": "consent-app-b-saml",
+                  "audience_restriction": "dev:kit:appb",
+                  "idp_metadata_url": "http://citizen-consentidp/consentidp/saml2/idp/metadata.php",
+                  "entityId": "dev:kit:appb",
+                  "sign_authn_req": "true",
+                  "sign_cert_file": "/certificates/appb.cert",
+                  "sign_key_file": "/certificates/appb.pem",
+                  "external_url": "http://localhost:8084",
+                  "metadata_path": "/appb/saml/metadata",
+                  "logout_path": "/appb/saml/logout",
+                  "slo_path": "/appb/saml/slo",
+                  "sso_path": "/appb/saml/SSO",
+                  "logout_landing_page": "https://telesund.esbjerg-kommune.t0.hosting.kitkube.dk/samtykke-admin",
+                  "cookie_domain": "localhost",
+                  "cookie_path": "/"
+
+                },
+                {
+                  "handler": "reverse_proxy",
+                  "transport": {
+                    "protocol": "http",
+                    "read_buffer_size": 4096
+                  },
+                  "upstreams": [
+                    {
+                      "dial": "app-b:8080"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

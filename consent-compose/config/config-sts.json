@@ -1,0 +1,15 @@
+[
+  {
+    "certificate": "/certificates/cwg.cert",
+    "itSystem": "consent",
+    "subject": "OU=Consent,O=KvalitetsIT,ST=Some-State,C=DK",
+    "attributes": [
+    ],
+    "endpoints": [
+      {
+        "name": "consent-ui-kitcaddy-wsc",
+        "audience": "dev:kit:cwg"
+      }
+    ]
+  }
+]
